@@ -595,16 +595,6 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
         </div>
       )}
       <div className="alc-library-scroll-area">
-        <div className="alc-lib-strip"
-          onPointerDown={onStripPointerDown}
-          onPointerMove={onStripPointerMove}
-          onPointerUp={onStripPointerUp}
-          onPointerCancel={onStripPointerUp}
-        >
-          <div className={`alc-lib-arrow${canScrollUp ? ' can-scroll' : ''}`}><PixelArrowUp /></div>
-          <div className="alc-lib-track" />
-          <div className={`alc-lib-arrow${canScrollDown ? ' can-scroll' : ''}`}><PixelArrowDown /></div>
-        </div>
         <div className="alc-library-list" ref={listRef}>
           {items.map(({ key, meta }) => (
             <div
@@ -622,6 +612,16 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
           {items.length === 0 && (
             <div className="alc-lib-empty">No matches.</div>
           )}
+        </div>
+        <div className="alc-lib-strip"
+          onPointerDown={onStripPointerDown}
+          onPointerMove={onStripPointerMove}
+          onPointerUp={onStripPointerUp}
+          onPointerCancel={onStripPointerUp}
+        >
+          <div className={`alc-lib-arrow${canScrollUp ? ' can-scroll' : ''}`}><PixelArrowUp /></div>
+          <div className="alc-lib-track" />
+          <div className={`alc-lib-arrow${canScrollDown ? ' can-scroll' : ''}`}><PixelArrowDown /></div>
         </div>
       </div>
     </div>
