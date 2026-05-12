@@ -631,7 +631,7 @@ function Help({ onClose, totalRecipes }) {
           <div className="alc-help-row">
             <div className="alc-help-num">01</div>
             <div className="alc-help-body">
-              <b>drag</b> an element from the library on the right into the play area.
+              <b>drag or tap</b> an element from the library into the play area.
             </div>
           </div>
           <div className="alc-help-row">
@@ -649,7 +649,7 @@ function Help({ onClose, totalRecipes }) {
           <div className="alc-help-row">
             <div className="alc-help-num">04</div>
             <div className="alc-help-body">
-              right-click or × to remove a tile from the play area.
+              tap × or long-press a tile to remove it from the play area.
             </div>
           </div>
         </div>

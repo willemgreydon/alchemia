@@ -762,13 +762,93 @@
 
   /* ====================== responsive ====================== */
   @media (max-width: 900px) {
-    .alc-topbar { grid-template-columns: 1fr; gap: 8px; height: auto; padding: 14px; }
-    .alc-logo { font-size: 30px; }
-    .alc-counter-bar { width: 160px; }
-    .alc-playarea { right: 0; bottom: 280px; top: 130px; }
-    .alc-library { top: auto; right: 0; left: 0; bottom: 72px; width: 100%; height: 208px; border-top: 2px solid var(--ink); border-left: none; }
-    .alc-library-list { grid-template-columns: repeat(6, 1fr); }
-    .alc-ticker { right: 0; }
+    /* Keep the original 3-col grid but collapse to ~54px by hiding tall items */
+    .alc-topbar {
+      grid-template-columns: 1fr auto 1fr;
+      height: 54px;
+      padding: 0 14px;
+      gap: 12px;
+    }
+    /* Strip the tagline and counter chrome — too tall for mobile */
+    .alc-tagline { display: none; }
+    .alc-logo { font-size: 26px; line-height: 1; }
+    .alc-counter-bar { display: none; }
+    .alc-counter-label { display: none; }
+    .alc-counter { gap: 4px; }
+    .alc-counter-discovered { font-size: 26px; }
+    .alc-counter-slash, .alc-counter-total { font-size: 18px; }
+    /* Compact action buttons */
+    .alc-actions { gap: 6px; }
+    .alc-btn {
+      min-height: 36px;
+      padding: 4px 10px;
+      font-size: 13px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+    .alc-btn:hover { box-shadow: 3px 3px 0 var(--ink); }
+
+    /* Play area — sits under 54px topbar, above library (200px) + ticker (60px) */
+    .alc-playarea { right: 0; top: 54px; bottom: 260px; }
+
+    /* Library — horizontal strip at bottom above ticker */
+    .alc-library {
+      top: auto; right: 0; left: 0; bottom: 60px;
+      width: 100%; height: 200px;
+      border-top: 2px solid var(--ink); border-left: none;
+    }
+    .alc-library-list { grid-template-columns: repeat(6, 1fr); touch-action: pan-y; }
+
+    /* Ticker — full width, horizontally scrollable hints */
+    .alc-ticker { right: 0; height: 60px; padding: 0 14px; gap: 12px; }
+    .alc-ticker-row { flex-wrap: nowrap; overflow-x: auto; }
+
+    /* Tile × always visible on touch (no hover state on phones) */
+    .alc-tile-x { opacity: 1; width: 22px; height: 22px; font-size: 15px; top: -10px; right: -10px; }
+
+    /* Toasts just below topbar */
+    .alc-toasts { top: 64px; left: 12px; }
+    .alc-toast { min-width: 220px; }
+  }
+
+  @media (max-width: 600px) {
+    .alc-topbar { height: 50px; padding: 0 10px; gap: 8px; }
+    .alc-logo { font-size: 22px; }
+    .alc-counter-discovered { font-size: 22px; }
+    .alc-counter-slash, .alc-counter-total { font-size: 15px; }
+    .alc-btn { font-size: 11px; padding: 4px 8px; min-height: 32px; }
+
+    /* Play area */
+    .alc-playarea { top: 50px; bottom: 238px; }
+
+    /* Library tighter */
+    .alc-library { height: 178px; bottom: 60px; }
+    .alc-library-list { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .alc-library-head { padding: 8px 12px 4px; }
+    .alc-library-title { font-size: 16px; }
+    .alc-search-wrap { padding: 6px 12px; }
+    .alc-search { padding: 5px 8px; font-size: 12px; }
+    .alc-recent { padding: 0 12px 6px; }
+
+    /* Ticker tighter */
+    .alc-ticker { height: 60px; padding: 0 12px; gap: 8px; }
+    .alc-ticker-label { font-size: 13px; letter-spacing: 0.06em; }
+    .alc-ticker-hint { padding: 3px 7px; font-size: 13px; gap: 3px; }
+    .alc-ticker-icon { width: 18px; height: 18px; }
+
+    /* Help modal */
+    .alc-help { padding: 20px 16px; }
+    .alc-help-title { font-size: 38px; }
+    .alc-help-eye { font-size: 32px; }
+    .alc-help-rules { margin: 16px 0 14px; gap: 8px; }
+    .alc-help-body { font-size: 12px; }
+    .alc-help-start { padding: 10px 20px; font-size: 16px; }
+    .alc-help-footnote { font-size: 10px; }
+
+    /* Toasts compact */
+    .alc-toasts { top: 60px; left: 8px; }
+    .alc-toast { min-width: 180px; padding: 7px 10px 7px 8px; gap: 8px; }
+    .alc-toast-glyph { width: 32px; height: 32px; }
+    .alc-toast-name { font-size: 14px; }
   }
 
 </style>
