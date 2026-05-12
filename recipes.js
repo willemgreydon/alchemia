@@ -306,6 +306,23 @@
   // ---------- Curated recipes ----------
   // [a, b, result] — order-agnostic; lookup normalizes.
   const HAND = [
+    // ── Pure chemistry: periodic-table elements → primal elements ─────────
+    ['hydrogen','oxygen','water'],       // 2H₂ + O₂ → 2H₂O
+    ['nitrogen','oxygen','air'],         // ~78% N₂ + 21% O₂ = atmosphere
+    ['silicon','oxygen','earth'],        // SiO₂ silica = earth's crust
+    ['magnesium','oxygen','fire'],       // Mg burns brilliantly in O₂
+    ['phosphorus','oxygen','fire'],      // white phosphorus autoignites in air
+    ['sodium','chlorine','salt'],        // NaCl table salt
+    ['iron','oxygen','rust'],            // Fe₂O₃ iron oxide
+    ['carbon','oxygen','smoke'],         // incomplete combustion → soot
+    ['calcium','silicon','stone'],       // calcium silicate = natural stone
+    ['hydrogen','hydrogen','energy'],    // H₂ fusion (simplified)
+    ['sodium','water','energy'],         // Na + H₂O → explosive reaction
+    ['potassium','water','energy'],      // K + H₂O → even more reactive
+    ['carbon','carbon','coal'],          // graphite / carbon deposit
+    ['sulfur','hydrogen','lava'],        // volcanic H₂S → sulfurous heat
+    ['calcium','oxygen','sand'],         // CaO lime → calcium compound
+
     // Tier 0 → 1
     ['water','fire','steam'],
     ['water','earth','mud'],
@@ -730,8 +747,8 @@
     'roentgenium','copernicium','nihonium','flerovium','moscovium','livermorium','tennessine','oganesson',
   ];
 
-  // base elements always discovered at start
-  const STARTERS = ['water', 'fire', 'earth', 'air', ...PERIODIC_TABLE_KEYS];
+  // base elements always discovered at start — only real periodic table elements
+  const STARTERS = [...PERIODIC_TABLE_KEYS];
 
   window.ALCHEMIA_DB = {
     META, RECIPES, LOOKUP, STARTERS, PERIODIC_TABLE_KEYS,

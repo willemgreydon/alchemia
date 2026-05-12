@@ -585,6 +585,27 @@
     margin: 2px 0;
   }
 
+  /* ====================== library sheet handle (mobile only) ====================== */
+  .alc-lib-handle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    flex-shrink: 0;
+    cursor: ns-resize;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    border-bottom: 1px solid rgba(14,14,14,0.1);
+  }
+  .alc-lib-handle-pill {
+    width: 36px;
+    height: 4px;
+    background: var(--ink);
+    opacity: 0.25;
+    border-radius: 2px;
+  }
+
   /* ====================== ghost (drag preview) ====================== */
   .alc-ghost {
     position: fixed;
@@ -833,15 +854,19 @@
     }
     .alc-btn:hover { box-shadow: 3px 3px 0 var(--ink); }
 
-    /* Play area — sits under 54px topbar, above library (230px) + ticker (60px) */
-    .alc-playarea { right: 0; top: 54px; bottom: 290px; }
+    /* Play area — bottom driven by --lib-h (set by JS snap sheet) */
+    .alc-playarea { right: 0; top: 54px; bottom: calc(var(--lib-h, 220px) + 60px); transition: bottom 220ms ease; }
+    body.lib-dragging .alc-playarea { transition: none; }
 
-    /* Library — horizontal strip at bottom above ticker */
+    /* Library — height driven by --lib-h */
+    .alc-lib-handle { display: flex; }
     .alc-library {
       top: auto; right: 0; left: 0; bottom: 60px;
-      width: 100%; height: 230px;
+      width: 100%; height: var(--lib-h, 220px);
       border-top: 2px solid var(--ink); border-left: none;
+      transition: height 220ms ease;
     }
+    body.lib-dragging .alc-library { transition: none; }
     /* Hide recent section — saves ~52px so 2 grid rows are visible */
     .alc-recent { display: none; }
     /* Slightly shorter grid items to fit 2 rows comfortably */
@@ -873,11 +898,11 @@
     .alc-counter-slash, .alc-counter-total { font-size: 15px; }
     .alc-btn { font-size: 11px; padding: 4px 8px; min-height: 32px; }
 
-    /* Play area */
-    .alc-playarea { top: 50px; bottom: 268px; }
+    /* Play area — bottom still driven by --lib-h */
+    .alc-playarea { top: 50px; }
 
-    /* Library tighter */
-    .alc-library { height: 208px; bottom: 60px; }
+    /* Library tighter — height from --lib-h, no override needed */
+    .alc-library { bottom: 60px; }
     .alc-library-list { grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .alc-library-head { padding: 8px 12px 4px; }
     .alc-library-title { font-size: 16px; }

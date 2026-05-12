@@ -90,11 +90,13 @@ function App() {
 
   // discovered (persisted)
   const [discovered, setDiscovered] = useState(() => {
+    // on load, keep only periodic-table elements — everything else must be re-discovered
+    const periodicSet = new Set(DB.PERIODIC_TABLE_KEYS);
     try {
       const stored = JSON.parse(localStorage.getItem('alchemia.discovered') || '[]');
       if (Array.isArray(stored) && stored.length) {
-        // always merge starters so newly added elements show up for existing players
-        return new Set([...stored, ...DB.STARTERS]);
+        const filtered = stored.filter(k => periodicSet.has(k));
+        return new Set([...filtered, ...DB.STARTERS]);
       }
     } catch (e) {}
     return new Set(DB.STARTERS);
@@ -206,7 +208,7 @@ function App() {
 
   // reset
   const resetAll = () => {
-    if (!confirm('Erase all discoveries? You will start from the four primal elements.')) return;
+    if (!confirm('Erase all discoveries? You will start from the 118 periodic table elements.')) return;
     setDiscovered(new Set(DB.STARTERS));
     setInstances([]);
     setRecent([]);
@@ -471,7 +473,13 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
   // sort all META by tier, only show discovered
   const items = useMemo(() => {
     const arr = [...discovered].map(k => ({ key: k, meta: DB.META[k] || { e: '?', c: '#888', t: 0 } }));
+    const periodicOrder = new Map(DB.PERIODIC_TABLE_KEYS.map((k, i) => [k, i]));
     arr.sort((a, b) => {
+      const aZ = periodicOrder.get(a.key);
+      const bZ = periodicOrder.get(b.key);
+      if (aZ !== undefined && bZ !== undefined) return aZ - bZ;
+      if (aZ !== undefined) return -1;
+      if (bZ !== undefined) return 1;
       if ((a.meta.t || 0) !== (b.meta.t || 0)) return (a.meta.t || 0) - (b.meta.t || 0);
       return a.key.localeCompare(b.key);
     });
@@ -501,6 +509,62 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
     return () => el.removeEventListener('scroll', syncArrows);
   }, [syncArrows]);
   useEffect(() => { syncArrows(); }, [items.length, syncArrows]);
+
+  // 3-state snap sheet (mobile only)
+  const SNAP_PEEK    = 56;
+  const SNAP_DEFAULT = 220;
+  const snapExpanded = () => Math.round(window.innerHeight * 0.55);
+  const snapPoints   = () => [SNAP_PEEK, SNAP_DEFAULT, snapExpanded()];
+  const handleRef = useRef(null);
+  useEffect(() => {
+    const handle = handleRef.current;
+    if (!handle) return;
+    let pid = null, startY = 0, startH = SNAP_DEFAULT;
+    const getH = () => parseInt(document.documentElement.style.getPropertyValue('--lib-h') || SNAP_DEFAULT, 10);
+    const setH = (h) => document.documentElement.style.setProperty('--lib-h', h + 'px');
+    const snap = (h) => {
+      const pts = snapPoints();
+      setH(pts.reduce((a, b) => Math.abs(b - h) < Math.abs(a - h) ? b : a));
+    };
+    const onDown = (e) => {
+      if (window.innerWidth > 900) return;
+      e.preventDefault(); e.stopPropagation();
+      handle.setPointerCapture(e.pointerId);
+      pid = e.pointerId; startY = e.clientY; startH = getH();
+      document.body.classList.add('lib-dragging');
+    };
+    const onMove = (e) => {
+      if (e.pointerId !== pid) return;
+      const pts = snapPoints();
+      const h = Math.min(pts[pts.length - 1], Math.max(pts[0], startH + (startY - e.clientY)));
+      setH(h);
+    };
+    const onUp = (e) => {
+      if (e.pointerId !== pid) return;
+      pid = null;
+      document.body.classList.remove('lib-dragging');
+      const totalMove = Math.abs(e.clientY - startY);
+      if (totalMove < 8) {
+        const pts = snapPoints();
+        const cur = getH();
+        const idx = pts.findIndex(s => Math.abs(s - cur) < 20);
+        setH(pts[(idx + 1) % pts.length]);
+      } else {
+        snap(getH());
+      }
+    };
+    handle.addEventListener('pointerdown', onDown);
+    handle.addEventListener('pointermove', onMove);
+    handle.addEventListener('pointerup', onUp);
+    handle.addEventListener('pointercancel', onUp);
+    if (window.innerWidth <= 900) setH(SNAP_DEFAULT);
+    return () => {
+      handle.removeEventListener('pointerdown', onDown);
+      handle.removeEventListener('pointermove', onMove);
+      handle.removeEventListener('pointerup', onUp);
+      handle.removeEventListener('pointercancel', onUp);
+    };
+  }, []);
 
   // scroll strip — native DOM listeners (React synthetic events don't reliably
   // handle setPointerCapture on iOS Safari)
@@ -580,6 +644,9 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
 
   return (
     <div className="alc-library" onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
+      <div className="alc-lib-handle" ref={handleRef}>
+        <div className="alc-lib-handle-pill" />
+      </div>
       <div className="alc-library-head">
         <div className="alc-library-title">LIBRARY</div>
         <div className="alc-library-count">{discovered.size} elements</div>
@@ -741,7 +808,7 @@ function Help({ onClose, totalRecipes }) {
           </div>
         </div>
         <div className="alc-help-start" onClick={onClose}>BEGIN →</div>
-        <div className="alc-help-footnote">start with the four primal elements: water · fire · earth · air</div>
+        <div className="alc-help-footnote">start with all 118 periodic table elements — combine them to discover everything else</div>
       </div>
     </div>
   );
