@@ -847,9 +847,10 @@
     .alc-lib-emoji { width: 30px; height: 30px; }
     /* Show the scroll strip; 5-col grid to share space with it */
     .alc-lib-strip { display: flex; }
-    .alc-library-list { grid-template-columns: repeat(5, 1fr); touch-action: pan-y; }
-    /* Allow vertical swipes on items to scroll natively */
-    .alc-lib-item { touch-action: pan-y; }
+    .alc-library-list { grid-template-columns: repeat(5, 1fr); }
+    /* Hide native scrollbar — strip is the scroll UI */
+    .alc-library-list { scrollbar-width: none; }
+    .alc-library-list::-webkit-scrollbar { display: none; }
 
     /* Ticker — full width, horizontally scrollable hints */
     .alc-ticker { right: 0; height: 60px; padding: 0 14px; gap: 12px; }
