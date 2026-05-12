@@ -574,8 +574,10 @@
     color: var(--ink);
     opacity: 0.15;
     transition: opacity 0.2s;
+    cursor: pointer;
   }
   .alc-lib-arrow.can-scroll { opacity: 1; }
+  .alc-lib-arrow.can-scroll:active { opacity: 0.6; }
   .alc-lib-track {
     flex: 1;
     width: 3px;
@@ -848,8 +850,8 @@
     /* Show the scroll strip; 5-col grid to share space with it */
     .alc-lib-strip { display: flex; }
     .alc-library-list { grid-template-columns: repeat(5, 1fr); }
-    /* Hide native scrollbar — strip is the scroll UI */
-    .alc-library-list { scrollbar-width: none; }
+    /* Hide native scrollbar and block native scroll — strip is the only scroll UI */
+    .alc-library-list { scrollbar-width: none; touch-action: none; }
     .alc-library-list::-webkit-scrollbar { display: none; }
 
     /* Ticker — full width, horizontally scrollable hints */

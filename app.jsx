@@ -92,7 +92,10 @@ function App() {
   const [discovered, setDiscovered] = useState(() => {
     try {
       const stored = JSON.parse(localStorage.getItem('alchemia.discovered') || '[]');
-      if (Array.isArray(stored) && stored.length) return new Set(stored);
+      if (Array.isArray(stored) && stored.length) {
+        // always merge starters so newly added elements show up for existing players
+        return new Set([...stored, ...DB.STARTERS]);
+      }
     } catch (e) {}
     return new Set(DB.STARTERS);
   });
@@ -624,9 +627,15 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
           )}
         </div>
         <div className="alc-lib-strip" ref={stripRef}>
-          <div className={`alc-lib-arrow${canScrollUp ? ' can-scroll' : ''}`}><PixelArrowUp /></div>
+          <div className={`alc-lib-arrow${canScrollUp ? ' can-scroll' : ''}`}
+            onClick={() => listRef.current?.scrollBy({ top: -80, behavior: 'smooth' })}>
+            <PixelArrowUp />
+          </div>
           <div className="alc-lib-track" />
-          <div className={`alc-lib-arrow${canScrollDown ? ' can-scroll' : ''}`}><PixelArrowDown /></div>
+          <div className={`alc-lib-arrow${canScrollDown ? ' can-scroll' : ''}`}
+            onClick={() => listRef.current?.scrollBy({ top: 80, behavior: 'smooth' })}>
+            <PixelArrowDown />
+          </div>
         </div>
       </div>
     </div>
