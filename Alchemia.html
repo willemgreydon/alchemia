@@ -787,15 +787,20 @@
     }
     .alc-btn:hover { box-shadow: 3px 3px 0 var(--ink); }
 
-    /* Play area — sits under 54px topbar, above library (200px) + ticker (60px) */
-    .alc-playarea { right: 0; top: 54px; bottom: 260px; }
+    /* Play area — sits under 54px topbar, above library (230px) + ticker (60px) */
+    .alc-playarea { right: 0; top: 54px; bottom: 290px; }
 
     /* Library — horizontal strip at bottom above ticker */
     .alc-library {
       top: auto; right: 0; left: 0; bottom: 60px;
-      width: 100%; height: 200px;
+      width: 100%; height: 230px;
       border-top: 2px solid var(--ink); border-left: none;
     }
+    /* Hide recent section — saves ~52px so 2 grid rows are visible */
+    .alc-recent { display: none; }
+    /* Slightly shorter grid items to fit 2 rows comfortably */
+    .alc-lib-item { min-height: 74px; }
+    .alc-lib-emoji { width: 30px; height: 30px; }
     .alc-library-list { grid-template-columns: repeat(6, 1fr); touch-action: pan-y; }
 
     /* Ticker — full width, horizontally scrollable hints */
@@ -818,10 +823,10 @@
     .alc-btn { font-size: 11px; padding: 4px 8px; min-height: 32px; }
 
     /* Play area */
-    .alc-playarea { top: 50px; bottom: 238px; }
+    .alc-playarea { top: 50px; bottom: 268px; }
 
     /* Library tighter */
-    .alc-library { height: 178px; bottom: 60px; }
+    .alc-library { height: 208px; bottom: 60px; }
     .alc-library-list { grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .alc-library-head { padding: 8px 12px 4px; }
     .alc-library-title { font-size: 16px; }
