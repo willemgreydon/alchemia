@@ -499,25 +499,39 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
   }, [syncArrows]);
   useEffect(() => { syncArrows(); }, [items.length, syncArrows]);
 
-  // scroll strip — drag on the strip scrolls the list
-  const stripDrag = useRef(null);
-  const onStripPointerDown = (e) => {
-    e.stopPropagation();
-    e.currentTarget.setPointerCapture(e.pointerId);
-    stripDrag.current = { pointerId: e.pointerId, startY: e.clientY, startTop: listRef.current?.scrollTop || 0 };
-  };
-  const onStripPointerMove = (e) => {
-    const d = stripDrag.current;
-    if (!d || d.pointerId !== e.pointerId) return;
-    const el = listRef.current;
-    if (!el) return;
-    const dy = e.clientY - d.startY;
-    const ratio = el.scrollHeight / Math.max(el.clientHeight, 1);
-    el.scrollTop = d.startTop + dy * ratio;
-  };
-  const onStripPointerUp = (e) => {
-    if (stripDrag.current?.pointerId === e.pointerId) stripDrag.current = null;
-  };
+  // scroll strip — native DOM listeners (React synthetic events don't reliably
+  // handle setPointerCapture on iOS Safari)
+  const stripRef = useRef(null);
+  useEffect(() => {
+    const strip = stripRef.current;
+    const list = listRef.current;
+    if (!strip || !list) return;
+    let pid = null, startY = 0, startTop = 0;
+    const onDown = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      strip.setPointerCapture(e.pointerId);
+      pid = e.pointerId;
+      startY = e.clientY;
+      startTop = list.scrollTop;
+    };
+    const onMove = (e) => {
+      if (e.pointerId !== pid) return;
+      const ratio = list.scrollHeight / Math.max(list.clientHeight, 1);
+      list.scrollTop = startTop + (e.clientY - startY) * ratio;
+    };
+    const onUp = (e) => { if (e.pointerId === pid) pid = null; };
+    strip.addEventListener('pointerdown', onDown);
+    strip.addEventListener('pointermove', onMove);
+    strip.addEventListener('pointerup', onUp);
+    strip.addEventListener('pointercancel', onUp);
+    return () => {
+      strip.removeEventListener('pointerdown', onDown);
+      strip.removeEventListener('pointermove', onMove);
+      strip.removeEventListener('pointerup', onUp);
+      strip.removeEventListener('pointercancel', onUp);
+    };
+  }, []);
 
   const onItemPointerDown = (e, key) => {
     e.stopPropagation();
@@ -628,12 +642,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
             <div className="alc-lib-empty">No matches.</div>
           )}
         </div>
-        <div className="alc-lib-strip"
-          onPointerDown={onStripPointerDown}
-          onPointerMove={onStripPointerMove}
-          onPointerUp={onStripPointerUp}
-          onPointerCancel={onStripPointerUp}
-        >
+        <div className="alc-lib-strip" ref={stripRef}>
           <div className={`alc-lib-arrow${canScrollUp ? ' can-scroll' : ''}`}><PixelArrowUp /></div>
           <div className="alc-lib-track" />
           <div className={`alc-lib-arrow${canScrollDown ? ' can-scroll' : ''}`}><PixelArrowDown /></div>
