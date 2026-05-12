@@ -11,6 +11,28 @@ function PixelIcon({ elKey, className = '' }) {
   return <div className={`alc-pixel ${className}`} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
+// pixel arrowheads for the library scroll strip
+function PixelArrowUp() {
+  return (
+    <svg width="14" height="10" viewBox="0 0 7 5" style={{ imageRendering: 'pixelated', display: 'block' }} fill="currentColor">
+      <rect x="3" y="0" width="1" height="1"/>
+      <rect x="2" y="1" width="3" height="1"/>
+      <rect x="1" y="2" width="5" height="1"/>
+      <rect x="0" y="3" width="7" height="1"/>
+    </svg>
+  );
+}
+function PixelArrowDown() {
+  return (
+    <svg width="14" height="10" viewBox="0 0 7 5" style={{ imageRendering: 'pixelated', display: 'block' }} fill="currentColor">
+      <rect x="0" y="0" width="7" height="1"/>
+      <rect x="1" y="1" width="5" height="1"/>
+      <rect x="2" y="2" width="3" height="1"/>
+      <rect x="3" y="3" width="1" height="1"/>
+    </svg>
+  );
+}
+
 // ============ small utilities ============
 function uid() { return Math.random().toString(36).slice(2, 9); }
 
@@ -457,6 +479,45 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
 
   // drag from library
   const dragRef = useRef(null);
+  const listRef = useRef(null);
+
+  // scroll strip — arrow visibility state
+  const [canScrollUp, setCanScrollUp] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
+  const syncArrows = useCallback(() => {
+    const el = listRef.current;
+    if (!el) return;
+    setCanScrollUp(el.scrollTop > 4);
+    setCanScrollDown(el.scrollTop < el.scrollHeight - el.clientHeight - 4);
+  }, []);
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', syncArrows, { passive: true });
+    syncArrows();
+    return () => el.removeEventListener('scroll', syncArrows);
+  }, [syncArrows]);
+  useEffect(() => { syncArrows(); }, [items.length, syncArrows]);
+
+  // scroll strip — drag on the strip scrolls the list
+  const stripDrag = useRef(null);
+  const onStripPointerDown = (e) => {
+    e.stopPropagation();
+    e.currentTarget.setPointerCapture(e.pointerId);
+    stripDrag.current = { pointerId: e.pointerId, startY: e.clientY, startTop: listRef.current?.scrollTop || 0 };
+  };
+  const onStripPointerMove = (e) => {
+    const d = stripDrag.current;
+    if (!d || d.pointerId !== e.pointerId) return;
+    const el = listRef.current;
+    if (!el) return;
+    const dy = e.clientY - d.startY;
+    const ratio = el.scrollHeight / Math.max(el.clientHeight, 1);
+    el.scrollTop = d.startTop + dy * ratio;
+  };
+  const onStripPointerUp = (e) => {
+    if (stripDrag.current?.pointerId === e.pointerId) stripDrag.current = null;
+  };
 
   const onItemPointerDown = (e, key) => {
     e.preventDefault();
@@ -533,23 +594,35 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
           </div>
         </div>
       )}
-      <div className="alc-library-list">
-        {items.map(({ key, meta }) => (
-          <div
-            key={key}
-            className="alc-lib-item"
-            onPointerDown={(e) => onItemPointerDown(e, key)}
-            style={{ '--tint': meta.c }}
-            title={DB.displayName(key)}
-          >
-            <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
-            <div className="alc-lib-name">{DB.displayName(key)}</div>
-            <div className="alc-lib-tier">T{meta.t}</div>
-          </div>
-        ))}
-        {items.length === 0 && (
-          <div className="alc-lib-empty">No matches.</div>
-        )}
+      <div className="alc-library-scroll-area">
+        <div className="alc-lib-strip"
+          onPointerDown={onStripPointerDown}
+          onPointerMove={onStripPointerMove}
+          onPointerUp={onStripPointerUp}
+          onPointerCancel={onStripPointerUp}
+        >
+          <div className={`alc-lib-arrow${canScrollUp ? ' can-scroll' : ''}`}><PixelArrowUp /></div>
+          <div className="alc-lib-track" />
+          <div className={`alc-lib-arrow${canScrollDown ? ' can-scroll' : ''}`}><PixelArrowDown /></div>
+        </div>
+        <div className="alc-library-list" ref={listRef}>
+          {items.map(({ key, meta }) => (
+            <div
+              key={key}
+              className="alc-lib-item"
+              onPointerDown={(e) => onItemPointerDown(e, key)}
+              style={{ '--tint': meta.c }}
+              title={DB.displayName(key)}
+            >
+              <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
+              <div className="alc-lib-name">{DB.displayName(key)}</div>
+              <div className="alc-lib-tier">T{meta.t}</div>
+            </div>
+          ))}
+          {items.length === 0 && (
+            <div className="alc-lib-empty">No matches.</div>
+          )}
+        </div>
       </div>
     </div>
   );

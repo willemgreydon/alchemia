@@ -543,6 +543,46 @@
     text-transform: uppercase;
   }
 
+  /* ====================== library scroll strip ====================== */
+  .alc-library-scroll-area {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .alc-lib-strip {
+    display: none; /* revealed on mobile via media query */
+    width: 36px;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-right: 2px solid var(--ink);
+    background: var(--paper-2);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: ns-resize;
+  }
+  .alc-lib-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 8px 0;
+    color: var(--ink);
+    opacity: 0.15;
+    transition: opacity 0.2s;
+  }
+  .alc-lib-arrow.can-scroll { opacity: 1; }
+  .alc-lib-track {
+    flex: 1;
+    width: 3px;
+    background: rgba(14,14,14,0.15);
+    margin: 2px 0;
+  }
+
   /* ====================== ghost (drag preview) ====================== */
   .alc-ghost {
     position: fixed;
@@ -805,7 +845,9 @@
     /* Slightly shorter grid items to fit 2 rows comfortably */
     .alc-lib-item { min-height: 74px; }
     .alc-lib-emoji { width: 30px; height: 30px; }
-    .alc-library-list { grid-template-columns: repeat(6, 1fr); touch-action: pan-y; }
+    /* Show the scroll strip; 5-col grid to share space with it */
+    .alc-lib-strip { display: flex; }
+    .alc-library-list { grid-template-columns: repeat(5, 1fr); touch-action: pan-y; }
 
     /* Ticker — full width, horizontally scrollable hints */
     .alc-ticker { right: 0; height: 60px; padding: 0 14px; gap: 12px; }
@@ -831,7 +873,7 @@
 
     /* Library tighter */
     .alc-library { height: 208px; bottom: 60px; }
-    .alc-library-list { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .alc-library-list { grid-template-columns: repeat(4, 1fr); gap: 6px; }
     .alc-library-head { padding: 8px 12px 4px; }
     .alc-library-title { font-size: 16px; }
     .alc-search-wrap { padding: 6px 12px; }
