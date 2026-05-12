@@ -170,7 +170,137 @@
     robot:    { e: '🤖', c: '#B8BBC0', t: 5 },
     computer: { e: '💻', c: '#3A3F4A', t: 5 },
     internet: { e: '🛰️', c: '#3F8BC8', t: 5 },
-    alchemia: { e: '🧬', c: '#E84A7A', t: 9 }
+    alchemia: { e: '🧬', c: '#E84A7A', t: 9 },
+
+    // ---------- Periodic Table (all 118 elements) ----------
+    // iron, gold, silver, copper already defined above.
+    // Colors: nonmetal #55EFC4 · halogen #FDCB6E · noble gas #81ECEC
+    //         alkali #FF6B6B · alk-earth #FF9F43 · transition #9098A4
+    //         post-trans #74B9FF · metalloid #A29BFE
+    //         lanthanide #FD79A8 · actinide #E17055
+
+    // Period 1
+    hydrogen:      { e: '💨', c: '#55EFC4', t: 6 },
+    helium:        { e: '🎈', c: '#81ECEC', t: 6 },
+    // Period 2
+    lithium:       { e: '🔋', c: '#FF6B6B', t: 6 },
+    beryllium:     { e: '⚪', c: '#FF9F43', t: 6 },
+    boron:         { e: '🪨', c: '#A29BFE', t: 6 },
+    carbon:        { e: '⬛', c: '#262321', t: 6 },
+    nitrogen:      { e: '🌬️', c: '#55EFC4', t: 6 },
+    oxygen:        { e: '🫧', c: '#55EFC4', t: 6 },
+    fluorine:      { e: '🟡', c: '#FDCB6E', t: 6 },
+    neon:          { e: '💡', c: '#81ECEC', t: 6 },
+    // Period 3
+    sodium:        { e: '🧂', c: '#FF6B6B', t: 6 },
+    magnesium:     { e: '✨', c: '#FF9F43', t: 6 },
+    aluminum:      { e: '🥤', c: '#74B9FF', t: 6 },
+    silicon:       { e: '💻', c: '#A29BFE', t: 6 },
+    phosphorus:    { e: '🔴', c: '#55EFC4', t: 6 },
+    sulfur:        { e: '🟨', c: '#55EFC4', t: 6 },
+    chlorine:      { e: '🟩', c: '#FDCB6E', t: 6 },
+    argon:         { e: '🫙', c: '#81ECEC', t: 6 },
+    // Period 4
+    potassium:     { e: '🍌', c: '#FF6B6B', t: 7 },
+    calcium:       { e: '🦴', c: '#FF9F43', t: 7 },
+    scandium:      { e: '🔬', c: '#9098A4', t: 7 },
+    titanium:      { e: '🚀', c: '#9098A4', t: 7 },
+    vanadium:      { e: '🔩', c: '#9098A4', t: 7 },
+    chromium:      { e: '🪞', c: '#9098A4', t: 7 },
+    manganese:     { e: '🔧', c: '#9098A4', t: 7 },
+    cobalt:        { e: '🔵', c: '#9098A4', t: 7 },
+    nickel:        { e: '🪙', c: '#9098A4', t: 7 },
+    zinc:          { e: '🪣', c: '#9098A4', t: 7 },
+    gallium:       { e: '🌡️', c: '#74B9FF', t: 7 },
+    germanium:     { e: '🖥️', c: '#A29BFE', t: 7 },
+    arsenic:       { e: '☠️', c: '#A29BFE', t: 7 },
+    selenium:      { e: '🔆', c: '#55EFC4', t: 7 },
+    bromine:       { e: '🟤', c: '#FDCB6E', t: 7 },
+    krypton:       { e: '🦸', c: '#81ECEC', t: 7 },
+    // Period 5
+    rubidium:      { e: '💜', c: '#FF6B6B', t: 7 },
+    strontium:     { e: '🎆', c: '#FF9F43', t: 7 },
+    yttrium:       { e: '🔭', c: '#9098A4', t: 7 },
+    zirconium:     { e: '💍', c: '#9098A4', t: 7 },
+    niobium:       { e: '⚙️', c: '#9098A4', t: 7 },
+    molybdenum:    { e: '🔩', c: '#9098A4', t: 7 },
+    technetium:    { e: '☢️', c: '#9098A4', t: 7 },
+    ruthenium:     { e: '🪩', c: '#9098A4', t: 7 },
+    rhodium:       { e: '🏅', c: '#9098A4', t: 7 },
+    palladium:     { e: '🥈', c: '#9098A4', t: 7 },
+    cadmium:       { e: '🔋', c: '#9098A4', t: 7 },
+    indium:        { e: '🔷', c: '#74B9FF', t: 7 },
+    tin:           { e: '🥫', c: '#74B9FF', t: 7 },
+    antimony:      { e: '🔮', c: '#A29BFE', t: 7 },
+    tellurium:     { e: '🌑', c: '#A29BFE', t: 7 },
+    iodine:        { e: '🟣', c: '#FDCB6E', t: 7 },
+    xenon:         { e: '💫', c: '#81ECEC', t: 7 },
+    // Period 6
+    caesium:       { e: '🌕', c: '#FF6B6B', t: 8 },
+    barium:        { e: '🎇', c: '#FF9F43', t: 8 },
+    lanthanum:     { e: '✴️', c: '#FD79A8', t: 8 },
+    cerium:        { e: '🌸', c: '#FD79A8', t: 8 },
+    praseodymium:  { e: '💚', c: '#FD79A8', t: 8 },
+    neodymium:     { e: '🧲', c: '#FD79A8', t: 8 },
+    promethium:    { e: '☢️', c: '#FD79A8', t: 8 },
+    samarium:      { e: '🪝', c: '#FD79A8', t: 8 },
+    europium:      { e: '💡', c: '#FD79A8', t: 8 },
+    gadolinium:    { e: '🏥', c: '#FD79A8', t: 8 },
+    terbium:       { e: '🌿', c: '#FD79A8', t: 8 },
+    dysprosium:    { e: '🔋', c: '#FD79A8', t: 8 },
+    holmium:       { e: '🌀', c: '#FD79A8', t: 8 },
+    erbium:        { e: '🔴', c: '#FD79A8', t: 8 },
+    thulium:       { e: '🌊', c: '#FD79A8', t: 8 },
+    ytterbium:     { e: '⚗️', c: '#FD79A8', t: 8 },
+    lutetium:      { e: '🔬', c: '#FD79A8', t: 8 },
+    hafnium:       { e: '⚙️', c: '#9098A4', t: 8 },
+    tantalum:      { e: '🛡️', c: '#9098A4', t: 8 },
+    tungsten:      { e: '💡', c: '#9098A4', t: 8 },
+    rhenium:       { e: '✈️', c: '#9098A4', t: 8 },
+    osmium:        { e: '🪨', c: '#9098A4', t: 8 },
+    iridium:       { e: '☄️', c: '#9098A4', t: 8 },
+    platinum:      { e: '💍', c: '#9098A4', t: 8 },
+    mercury:       { e: '🌡️', c: '#9098A4', t: 8 },
+    thallium:      { e: '☠️', c: '#74B9FF', t: 8 },
+    lead:          { e: '⚓', c: '#74B9FF', t: 8 },
+    bismuth:       { e: '🌈', c: '#74B9FF', t: 8 },
+    polonium:      { e: '☢️', c: '#74B9FF', t: 8 },
+    astatine:      { e: '⚫', c: '#FDCB6E', t: 8 },
+    radon:         { e: '🌫️', c: '#81ECEC', t: 8 },
+    // Period 7
+    francium:      { e: '⚡', c: '#FF6B6B', t: 8 },
+    radium:        { e: '💚', c: '#FF9F43', t: 8 },
+    actinium:      { e: '✨', c: '#E17055', t: 8 },
+    thorium:       { e: '🌑', c: '#E17055', t: 8 },
+    protactinium:  { e: '🔬', c: '#E17055', t: 8 },
+    uranium:       { e: '☢️', c: '#E17055', t: 8 },
+    neptunium:     { e: '🔵', c: '#E17055', t: 8 },
+    plutonium:     { e: '💣', c: '#E17055', t: 8 },
+    americium:     { e: '🔴', c: '#E17055', t: 8 },
+    curium:        { e: '🧪', c: '#E17055', t: 8 },
+    berkelium:     { e: '⚗️', c: '#E17055', t: 8 },
+    californium:   { e: '🌟', c: '#E17055', t: 8 },
+    einsteinium:   { e: '🧠', c: '#E17055', t: 8 },
+    fermium:       { e: '⚛️', c: '#E17055', t: 8 },
+    mendelevium:   { e: '📖', c: '#E17055', t: 8 },
+    nobelium:      { e: '🏆', c: '#E17055', t: 8 },
+    lawrencium:    { e: '🔭', c: '#E17055', t: 8 },
+    // Superheavy (Z = 104–118)
+    rutherfordium: { e: '⚛️', c: '#9098A4', t: 8 },
+    dubnium:       { e: '🔩', c: '#9098A4', t: 8 },
+    seaborgium:    { e: '🧲', c: '#9098A4', t: 8 },
+    bohrium:       { e: '🌀', c: '#9098A4', t: 8 },
+    hassium:       { e: '⚗️', c: '#9098A4', t: 8 },
+    meitnerium:    { e: '🔬', c: '#9098A4', t: 8 },
+    darmstadtium:  { e: '💥', c: '#9098A4', t: 8 },
+    roentgenium:   { e: '☢️', c: '#9098A4', t: 8 },
+    copernicium:   { e: '🌍', c: '#9098A4', t: 8 },
+    nihonium:      { e: '🗾', c: '#74B9FF', t: 8 },
+    flerovium:     { e: '💨', c: '#74B9FF', t: 8 },
+    moscovium:     { e: '🏙️', c: '#74B9FF', t: 8 },
+    livermorium:   { e: '🔬', c: '#74B9FF', t: 8 },
+    tennessine:    { e: '🎸', c: '#FDCB6E', t: 8 },
+    oganesson:     { e: '🌌', c: '#81ECEC', t: 8 }
   };
 
   // ---------- Curated recipes ----------
@@ -351,7 +481,138 @@
     // Closing: Alchemia itself
     ['magic','wisdom','alchemia'],
     ['god','wisdom','alchemia'],
-    ['phoenix','dragon','alchemia']
+    ['phoenix','dragon','alchemia'],
+
+    // ── Periodic Table discovery recipes ──────────────────────────────────
+    // Period 1
+    ['water','lightning','hydrogen'],      // electrolysis
+    ['star','hydrogen','helium'],          // stellar nucleosynthesis
+
+    // Period 2
+    ['stone','energy','lithium'],
+    ['crystal','stone','beryllium'],
+    ['desert','stone','boron'],
+    ['coal','pressure','carbon'],
+    ['air','lightning','nitrogen'],
+    ['plant','sun','oxygen'],              // photosynthesis
+    ['glass','energy','fluorine'],
+    ['light','air','neon'],
+
+    // Period 3
+    ['salt','fire','sodium'],
+    ['sea','energy','magnesium'],
+    ['clay','energy','aluminum'],
+    ['glass','stone','silicon'],
+    ['life','ash','phosphorus'],
+    ['volcano','earth','sulfur'],
+    ['salt','energy','chlorine'],
+    ['air','crystal','argon'],
+
+    // Period 4
+    ['ash','water','potassium'],           // wood-ash lye
+    ['sea','stone','calcium'],             // limestone from ocean
+    ['earth','metal','scandium'],
+    ['metal','energy','titanium'],
+    ['metal','stone','vanadium'],
+    ['iron','energy','chromium'],
+    ['iron','earth','manganese'],
+    ['iron','crystal','cobalt'],
+    ['metal','lightning','nickel'],
+    ['rust','energy','zinc'],
+    ['aluminum','water','gallium'],        // gallium melts in hand
+    ['silicon','metal','germanium'],
+    ['ash','stone','arsenic'],
+    ['sulfur','earth','selenium'],
+    ['fire','sea','bromine'],
+    ['air','neon','krypton'],
+
+    // Period 5
+    ['lithium','energy','rubidium'],
+    ['calcium','fire','strontium'],        // strontium in fireworks
+    ['crystal','earth','yttrium'],
+    ['crystal','metal','zirconium'],
+    ['metal','volcano','niobium'],
+    ['metal','mountain','molybdenum'],
+    ['metal','star','technetium'],         // only stable via stars / reactors
+    ['metal','ocean','ruthenium'],
+    ['gold','metal','rhodium'],
+    ['silver','metal','palladium'],
+    ['zinc','energy','cadmium'],
+    ['tin','energy','indium'],
+    ['metal','sand','tin'],
+    ['tin','fire','antimony'],
+    ['crystal','sea','tellurium'],
+    ['sea','ash','iodine'],
+    ['air','energy','xenon'],
+
+    // Period 6
+    ['rubidium','energy','caesium'],
+    ['calcium','energy','barium'],
+    ['mountain','crystal','lanthanum'],    // rare-earth ore in mountains
+    ['lanthanum','fire','cerium'],
+    ['lanthanum','energy','praseodymium'],
+    ['lanthanum','machine','neodymium'],   // neodymium magnets
+    ['neodymium','energy','promethium'],
+    ['neodymium','earth','samarium'],
+    ['lanthanum','light','europium'],      // europium in fluorescent lights
+    ['lanthanum','metal','gadolinium'],
+    ['lanthanum','crystal','terbium'],
+    ['samarium','energy','dysprosium'],
+    ['dysprosium','energy','holmium'],
+    ['holmium','energy','erbium'],
+    ['erbium','energy','thulium'],
+    ['thulium','energy','ytterbium'],
+    ['ytterbium','energy','lutetium'],
+    ['zirconium','energy','hafnium'],
+    ['metal','pressure','tantalum'],
+    ['iron','pressure','tungsten'],        // tungsten is the densest metal
+    ['tungsten','energy','rhenium'],
+    ['meteor','metal','osmium'],           // osmium found in meteorites
+    ['asteroid','metal','iridium'],        // K-Pg boundary iridium layer
+    ['gold','pressure','platinum'],
+    ['silver','sulfur','mercury'],         // cinnabar (HgS) ore
+    ['iron','time','lead'],                // Pb is end-product of decay chains
+    ['lead','energy','thallium'],
+    ['lead','crystal','bismuth'],
+    ['radium','time','polonium'],          // radium decay product
+    ['iodine','energy','astatine'],
+    ['stone','void','radon'],              // radon seeps from radioactive rock
+
+    // Period 7
+    ['caesium','energy','francium'],
+    ['earth','time','radium'],
+    ['radium','energy','actinium'],
+    ['stone','time','thorium'],
+    ['thorium','energy','protactinium'],
+    ['thorium','time','uranium'],
+    ['uranium','energy','neptunium'],
+    ['neptunium','energy','plutonium'],
+    ['plutonium','energy','americium'],
+    ['americium','energy','curium'],
+    ['curium','energy','berkelium'],
+    ['berkelium','energy','californium'],
+    ['californium','energy','einsteinium'],
+    ['einsteinium','energy','fermium'],
+    ['fermium','energy','mendelevium'],
+    ['mendelevium','energy','nobelium'],
+    ['nobelium','energy','lawrencium'],
+
+    // Superheavy (Z = 104–118) — particle-accelerator chain
+    ['lawrencium','energy','rutherfordium'],
+    ['rutherfordium','energy','dubnium'],
+    ['dubnium','energy','seaborgium'],
+    ['seaborgium','energy','bohrium'],
+    ['bohrium','energy','hassium'],
+    ['hassium','energy','meitnerium'],
+    ['meitnerium','energy','darmstadtium'],
+    ['darmstadtium','energy','roentgenium'],
+    ['roentgenium','energy','copernicium'],
+    ['copernicium','energy','nihonium'],
+    ['nihonium','energy','flerovium'],
+    ['flerovium','energy','moscovium'],
+    ['moscovium','energy','livermorium'],
+    ['livermorium','energy','tennessine'],
+    ['tennessine','energy','oganesson']
   ];
 
   // ---------- Procedural modifier expansion ----------
@@ -446,11 +707,34 @@
     return prettify(key);
   }
 
+  // All 118 periodic table elements — always pre-discovered
+  const PERIODIC_TABLE_KEYS = [
+    'hydrogen','helium',
+    'lithium','beryllium','boron','carbon','nitrogen','oxygen','fluorine','neon',
+    'sodium','magnesium','aluminum','silicon','phosphorus','sulfur','chlorine','argon',
+    'potassium','calcium','scandium','titanium','vanadium','chromium','manganese',
+    'iron','cobalt','nickel','copper','zinc','gallium','germanium','arsenic',
+    'selenium','bromine','krypton',
+    'rubidium','strontium','yttrium','zirconium','niobium','molybdenum','technetium',
+    'ruthenium','rhodium','palladium','silver','cadmium','indium','tin','antimony',
+    'tellurium','iodine','xenon',
+    'caesium','barium',
+    'lanthanum','cerium','praseodymium','neodymium','promethium','samarium','europium',
+    'gadolinium','terbium','dysprosium','holmium','erbium','thulium','ytterbium','lutetium',
+    'hafnium','tantalum','tungsten','rhenium','osmium','iridium','platinum','gold',
+    'mercury','thallium','lead','bismuth','polonium','astatine','radon',
+    'francium','radium',
+    'actinium','thorium','protactinium','uranium','neptunium','plutonium','americium',
+    'curium','berkelium','californium','einsteinium','fermium','mendelevium','nobelium','lawrencium',
+    'rutherfordium','dubnium','seaborgium','bohrium','hassium','meitnerium','darmstadtium',
+    'roentgenium','copernicium','nihonium','flerovium','moscovium','livermorium','tennessine','oganesson',
+  ];
+
   // base elements always discovered at start
-  const STARTERS = ['water', 'fire', 'earth', 'air'];
+  const STARTERS = ['water', 'fire', 'earth', 'air', ...PERIODIC_TABLE_KEYS];
 
   window.ALCHEMIA_DB = {
-    META, RECIPES, LOOKUP, STARTERS,
+    META, RECIPES, LOOKUP, STARTERS, PERIODIC_TABLE_KEYS,
     combine, displayName, prettify,
     totalRecipes: RECIPES.length,
     totalElements: Object.keys(META).length
