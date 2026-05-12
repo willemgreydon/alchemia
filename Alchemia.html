@@ -848,6 +848,8 @@
     /* Show the scroll strip; 5-col grid to share space with it */
     .alc-lib-strip { display: flex; }
     .alc-library-list { grid-template-columns: repeat(5, 1fr); touch-action: pan-y; }
+    /* Allow vertical swipes on items to scroll natively */
+    .alc-lib-item { touch-action: pan-y; }
 
     /* Ticker — full width, horizontally scrollable hints */
     .alc-ticker { right: 0; height: 60px; padding: 0 14px; gap: 12px; }

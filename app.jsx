@@ -520,26 +520,38 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
   };
 
   const onItemPointerDown = (e, key) => {
-    e.preventDefault();
     e.stopPropagation();
-    e.currentTarget.setPointerCapture(e.pointerId);
-    dragRef.current = { key, pointerId: e.pointerId, startX: e.clientX, startY: e.clientY };
-    // create a floating ghost
-    const ghost = document.createElement('div');
-    ghost.className = 'alc-ghost';
-    const meta = DB.META[key];
-    const iconHtml = ICONS.renderIcon(key);
-    ghost.innerHTML = `<div class="alc-tile-emoji alc-pixel">${iconHtml}</div>`;
-    ghost.style.setProperty('--tint', meta.c);
-    document.body.appendChild(ghost);
-    ghost.style.left = (e.clientX - 32) + 'px';
-    ghost.style.top = (e.clientY - 32) + 'px';
-    dragRef.current.ghost = ghost;
+    // Don't capture immediately — wait for a movement threshold so vertical
+    // swipes can fall through to the native list scroll.
+    dragRef.current = { key, pointerId: e.pointerId, startX: e.clientX, startY: e.clientY, element: e.currentTarget, captured: false, ghost: null };
   };
 
   const onPointerMove = (e) => {
     const d = dragRef.current;
     if (!d || d.pointerId !== e.pointerId) return;
+
+    if (!d.captured) {
+      const dx = Math.abs(e.clientX - d.startX);
+      const dy = Math.abs(e.clientY - d.startY);
+      if (dx < 6 && dy < 6) return; // below threshold
+      // Mostly vertical → let browser scroll, cancel drag
+      if (dy > dx * 1.2) { dragRef.current = null; return; }
+      // Threshold exceeded and not vertical → start drag
+      e.preventDefault();
+      d.element.setPointerCapture(e.pointerId);
+      d.captured = true;
+      const ghost = document.createElement('div');
+      ghost.className = 'alc-ghost';
+      const meta = DB.META[d.key];
+      ghost.innerHTML = `<div class="alc-tile-emoji alc-pixel">${ICONS.renderIcon(d.key)}</div>`;
+      ghost.style.setProperty('--tint', meta.c);
+      document.body.appendChild(ghost);
+      ghost.style.left = (e.clientX - 32) + 'px';
+      ghost.style.top = (e.clientY - 32) + 'px';
+      d.ghost = ghost;
+      return;
+    }
+
     if (d.ghost) {
       d.ghost.style.left = (e.clientX - 32) + 'px';
       d.ghost.style.top = (e.clientY - 32) + 'px';
@@ -550,13 +562,16 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
     const d = dragRef.current;
     if (!d || d.pointerId !== e.pointerId) return;
     if (d.ghost) d.ghost.remove();
-    // dispatch drop
-    window.dispatchEvent(new CustomEvent('alchemia:librarydrop', {
-      detail: { key: d.key, clientX: e.clientX, clientY: e.clientY }
-    }));
-    // also: if click without movement, spawn near center of play area
+
+    if (d.captured) {
+      // Full drag — dispatch to play area
+      window.dispatchEvent(new CustomEvent('alchemia:librarydrop', {
+        detail: { key: d.key, clientX: e.clientX, clientY: e.clientY }
+      }));
+    }
+    // Tap (or short drag) — spawn near center
     const moved = Math.hypot(e.clientX - d.startX, e.clientY - d.startY);
-    if (moved < 4 && playRef.current) {
+    if (moved < 12 && playRef.current) {
       const rect = playRef.current.getBoundingClientRect();
       const x = rect.width / 2 - 32 + (Math.random() - 0.5) * 80;
       const y = rect.height / 2 - 32 + (Math.random() - 0.5) * 80;
