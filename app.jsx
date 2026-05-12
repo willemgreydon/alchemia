@@ -676,19 +676,41 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
       )}
       <div className="alc-library-scroll-area">
         <div className="alc-library-list" ref={listRef}>
-          {items.map(({ key, meta }) => (
-            <div
-              key={key}
-              className="alc-lib-item"
-              onPointerDown={(e) => onItemPointerDown(e, key)}
-              style={{ '--tint': meta.c }}
-              title={DB.displayName(key)}
-            >
-              <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
-              <div className="alc-lib-name">{DB.displayName(key)}</div>
-              <div className="alc-lib-tier">T{meta.t}</div>
-            </div>
-          ))}
+          {items.map(({ key, meta }) => {
+            const pt = window.PeriodicTable?.BY_NAME[key.toLowerCase()];
+            if (pt) {
+              const stateAbbr = { solid: 's', liquid: 'l', gas: 'g' }[pt.state] || '';
+              return (
+                <div
+                  key={key}
+                  className="alc-lib-item alc-lib-item--pt"
+                  onPointerDown={(e) => onItemPointerDown(e, key)}
+                  style={{ '--tint': meta.c }}
+                  title={`${pt.name} — ${pt.cat}`}
+                >
+                  <div className="alc-pt-z">{pt.z}</div>
+                  <div className="alc-pt-state">{stateAbbr}</div>
+                  <div className="alc-pt-sym">{pt.sym}</div>
+                  <div className="alc-pt-name">{pt.name}</div>
+                  <div className="alc-pt-weight">{pt.weight}</div>
+                  <div className="alc-pt-shells">{pt.shells.join('·')}</div>
+                </div>
+              );
+            }
+            return (
+              <div
+                key={key}
+                className="alc-lib-item"
+                onPointerDown={(e) => onItemPointerDown(e, key)}
+                style={{ '--tint': meta.c }}
+                title={DB.displayName(key)}
+              >
+                <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
+                <div className="alc-lib-name">{DB.displayName(key)}</div>
+                <div className="alc-lib-tier">T{meta.t}</div>
+              </div>
+            );
+          })}
           {items.length === 0 && (
             <div className="alc-lib-empty">No matches.</div>
           )}
