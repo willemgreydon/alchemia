@@ -12,6 +12,10 @@
   /* ====================== reset / base ====================== */
   *, *::before, *::after { box-sizing: border-box; }
   html, body, #root { margin:0; padding:0; height:100%; overflow:hidden; }
+  /* iOS Safari zooms on focus if font-size < 16px — prevent it */
+  @supports (-webkit-touch-callout: none) {
+    input, select, textarea { font-size: 16px !important; }
+  }
   body {
     font-family: 'DM Mono', 'Space Mono', ui-monospace, monospace;
     color: #0E0E0E;
