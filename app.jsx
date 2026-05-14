@@ -690,7 +690,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
                 >
                   <div className="alc-pt-z">{pt.z}</div>
                   <div className="alc-pt-state">{stateAbbr}</div>
-                  <div className="alc-pt-sym">{pt.sym}</div>
+                  <div className="alc-pt-icon"><PixelIcon elKey={key} /></div>
                   <div className="alc-pt-name">{pt.name}</div>
                   <div className="alc-pt-weight">{pt.weight}</div>
                   <div className="alc-pt-shells">{pt.shells.join('·')}</div>

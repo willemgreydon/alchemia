@@ -250,6 +250,11 @@
   }
   .pa-spin { animation: pa-spin 14s linear infinite; transform-origin: 50% 50%; }
 
+  @keyframes pa-spin3d {
+    from { transform: perspective(120px) rotateY(0deg); }
+    to   { transform: perspective(120px) rotateY(360deg); }
+  }
+
   @keyframes pa-jitter {
     0%, 100% { transform: translate(0, 0); }
     20% { transform: translate(-2%, 1%); }
@@ -317,8 +322,13 @@
   .pa-ov-flicker { animation: pa-flicker 0.55s ease-in-out infinite; transform-origin: 50% 0%; }
   .pa-ov-pulse { animation: pa-pulse 2s ease-in-out infinite; }
 
+  /* suppress inner SVG animation when the container already does 3D spin */
+  .alc-pt-icon .pa-anim,
+  .alc-lib-emoji .pa-anim { animation: none !important; }
+
   @media (prefers-reduced-motion: reduce) {
     .pa-anim, .pa-overlay { animation: none !important; }
+    .alc-pt-icon, .alc-lib-emoji { animation: none !important; }
   }
 
 
@@ -471,7 +481,9 @@
 
   .alc-library-list {
     flex: 1;
+    min-width: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 8px 12px 18px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -496,6 +508,8 @@
     box-shadow: 2px 2px 0 var(--ink);
     --tint: var(--gold);
     min-height: 86px;
+    min-width: 0;
+    overflow: hidden;
     touch-action: none;
   }
   .alc-lib-item:hover {
@@ -508,6 +522,8 @@
     line-height: 1;
     pointer-events: none;
     display: block;
+    animation: pa-spin3d 5s linear infinite;
+    will-change: transform;
   }
   .alc-lib-emoji svg { display: block; width: 100%; height: 100%; }
   .alc-lib-name {
@@ -560,14 +576,21 @@
     letter-spacing: 0.04em;
     pointer-events: none;
   }
-  .alc-pt-sym {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--tint);
+  /* pixel art icon replaces the big symbol on PT cards */
+  .alc-pt-icon {
+    width: 36px;
+    height: 36px;
     margin-top: 12px;
-    letter-spacing: -0.02em;
+    display: block;
     pointer-events: none;
+    flex-shrink: 0;
+    animation: pa-spin3d 5s linear infinite;
+    will-change: transform;
+  }
+  /* the PixelIcon div inside the card icon slot */
+  .alc-pt-icon .alc-pixel {
+    width: 100%;
+    height: 100%;
   }
   .alc-pt-name {
     font-size: 8px;
@@ -936,6 +959,7 @@
     /* Slightly shorter grid items to fit 2 rows comfortably */
     .alc-lib-item { min-height: 74px; }
     .alc-lib-emoji { width: 30px; height: 30px; }
+    .alc-pt-icon { width: 28px; height: 28px; margin-top: 10px; }
     /* Show the scroll strip; 5-col grid to share space with it */
     .alc-lib-strip { display: flex; }
     .alc-library-list { grid-template-columns: repeat(5, 1fr); }

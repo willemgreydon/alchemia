@@ -575,39 +575,438 @@
     return g;
   }
 
+  // ---------- NEW element-specific archetypes ----------
+
+  // Atom: nucleus center with electron orbit rings
+  function s_atom() {
+    const g = blank();
+    // nucleus core
+    circle(g, 7, 7, 1.8, 4);
+    ring(g, 7, 7, 2.2, 2);
+    // horizontal orbit ellipse
+    for (let x = 2; x <= 12; x++) {
+      const dy = Math.round(0.5 * Math.sin((x - 2) / 10 * Math.PI));
+      px(g, x, 7 + dy, 2);
+    }
+    // tilted orbit 1
+    line(g, 3, 4, 11, 10, 2);
+    line(g, 11, 4, 3, 10, 2);
+    // electron dots on orbits
+    px(g, 2, 7, 3); px(g, 12, 7, 3);
+    px(g, 7, 2, 3); px(g, 7, 12, 3);
+    px(g, 3, 4, 3); px(g, 11, 10, 3);
+    return g;
+  }
+
+  // Bubble / gas: cluster of floating circles
+  function s_bubble() {
+    const g = blank();
+    circle(g, 7, 8, 3.2, 2);
+    ring(g, 7, 8, 3.5, 1);
+    circle(g, 4, 5, 1.8, 2);
+    ring(g, 4, 5, 2, 1);
+    circle(g, 10, 5, 1.5, 2);
+    ring(g, 10, 5, 1.8, 1);
+    // shine
+    px(g, 5, 7, 3); px(g, 6, 7, 4);
+    px(g, 3, 4, 3); px(g, 9, 5, 3);
+    return g;
+  }
+
+  // Magnet: horseshoe shape
+  function s_magnet() {
+    const g = blank();
+    // horseshoe body
+    rect(g, 4, 4, 3, 6, 2);
+    rect(g, 8, 4, 3, 6, 2);
+    // top arc
+    circle(g, 7, 5, 3, 2);
+    circle(g, 7, 5, 1.5, 0);
+    // pole tips — two colors
+    rect(g, 4, 9, 3, 2, 4);   // N pole bright
+    rect(g, 8, 9, 3, 2, 1);   // S pole dark
+    // outline
+    rect(g, 4, 4, 3, 1, 1);
+    rect(g, 8, 4, 3, 1, 1);
+    // field arc hints
+    px(g, 2, 8, 1); px(g, 2, 9, 1);
+    px(g, 12, 8, 1); px(g, 12, 9, 1);
+    return g;
+  }
+
+  // Radioactive / nuclear: trefoil radiation symbol
+  function s_radioactive() {
+    const g = blank();
+    // center circle
+    circle(g, 7, 7, 1.5, 4);
+    // three blades at 0°, 120°, 240°
+    const angles = [0, 2.094, 4.189]; // 0, 120, 240 deg in radians
+    for (const a of angles) {
+      for (let r = 2.5; r <= 4.5; r += 0.5) {
+        const cx = 7 + r * Math.cos(a);
+        const cy = 7 + r * Math.sin(a);
+        for (let da = -0.45; da <= 0.45; da += 0.3) {
+          const bx = 7 + r * Math.cos(a + da);
+          const by = 7 + r * Math.sin(a + da);
+          px(g, Math.round(bx), Math.round(by), 2);
+        }
+      }
+    }
+    // highlight blade tips
+    for (const a of angles) {
+      const bx = 7 + 4.5 * Math.cos(a);
+      const by = 7 + 4.5 * Math.sin(a);
+      px(g, Math.round(bx), Math.round(by), 3);
+    }
+    return g;
+  }
+
+  // Liquid metal: blobby drip with metallic sheen
+  function s_liquid() {
+    const g = blank();
+    // main body
+    circle(g, 7, 8, 3.5, 2);
+    ring(g, 7, 8, 3.8, 1);
+    // drip tip
+    px(g, 7, 3, 2); px(g, 7, 4, 2); px(g, 6, 4, 2); px(g, 8, 4, 2);
+    px(g, 7, 5, 2); px(g, 6, 5, 2); px(g, 8, 5, 2);
+    // metallic multi-highlight
+    px(g, 5, 7, 4); px(g, 5, 8, 3); px(g, 6, 7, 4);
+    px(g, 8, 10, 3); px(g, 9, 10, 3);
+    // reflection stripe
+    rect(g, 5, 9, 3, 1, 3);
+    return g;
+  }
+
+  // Wire / coil: spring-like helix symbol
+  function s_coil() {
+    const g = blank();
+    // coil loops — series of arcs
+    const points = [
+      [4,4],[6,3],[8,3],[10,4],[11,6],[10,7],[8,7],[6,7],
+      [4,8],[3,10],[4,11],[6,11],[8,11],[10,10],[11,11]
+    ];
+    for (let i = 0; i < points.length - 1; i++) {
+      line(g, points[i][0], points[i][1], points[i+1][0], points[i+1][1], 2);
+    }
+    // highlights at peaks
+    px(g, 7, 3, 3); px(g, 7, 7, 3); px(g, 7, 11, 3);
+    px(g, 3, 9, 4); px(g, 11, 5, 4);
+    return g;
+  }
+
+  // Prism / rainbow crystal: triangle with color bands
+  function s_prism() {
+    const g = blank();
+    // triangle body
+    for (let i = 0; i < 8; i++) {
+      rect(g, 7 - i, 4 + i, i * 2 + 1, 1, i < 2 ? 4 : i < 4 ? 3 : i < 6 ? 2 : 1);
+    }
+    // left edge outline
+    for (let i = 0; i < 8; i++) px(g, 7 - i, 4 + i, 1);
+    for (let i = 0; i < 8; i++) px(g, 7 + i, 4 + i, 1);
+    // top vertex shine
+    px(g, 7, 3, 4); px(g, 7, 4, 4);
+    // scattered exit rays
+    px(g, 2, 10, 3); px(g, 1, 11, 2);
+    px(g, 12, 11, 3); px(g, 13, 12, 2);
+    return g;
+  }
+
+  // Shield / heavy: thick defensive plate for heavy metals
+  function s_shield() {
+    const g = blank();
+    // shield body
+    rect(g, 4, 3, 7, 7, 2);
+    // pointed bottom
+    px(g, 5, 10, 2); px(g, 6, 10, 2); px(g, 7, 10, 2); px(g, 8, 10, 2); px(g, 9, 10, 2);
+    px(g, 6, 11, 2); px(g, 7, 11, 2); px(g, 8, 11, 2);
+    px(g, 7, 12, 2);
+    // outline
+    rect(g, 4, 3, 7, 1, 1);
+    for (let y = 3; y <= 10; y++) { px(g, 4, y, 1); px(g, 10, y, 1); }
+    rect(g, 4, 10, 7, 1, 1);
+    // cross emblem
+    rect(g, 7, 5, 1, 4, 1);
+    rect(g, 5, 7, 5, 1, 1);
+    // highlight
+    px(g, 5, 4, 3); px(g, 6, 4, 3); px(g, 5, 5, 3);
+    return g;
+  }
+
+  // Spark / plasma: irregular electric discharge
+  function s_spark() {
+    const g = blank();
+    // main fork
+    line(g, 7, 1, 5, 5, 2);
+    line(g, 5, 5, 8, 7, 2);
+    line(g, 8, 7, 4, 11, 2);
+    // branch
+    line(g, 5, 5, 3, 8, 2);
+    line(g, 8, 7, 11, 6, 2);
+    line(g, 11, 6, 10, 10, 2);
+    // glow pixels
+    px(g, 7, 1, 4); px(g, 7, 2, 4);
+    px(g, 8, 6, 4); px(g, 7, 7, 4);
+    px(g, 5, 11, 3); px(g, 4, 12, 3);
+    // edge halos
+    px(g, 3, 8, 1); px(g, 12, 6, 1);
+    return g;
+  }
+
+  // Lantern / glow: luminous gas tube for noble gases
+  function s_lantern() {
+    const g = blank();
+    // tube body
+    rect(g, 5, 4, 5, 7, 2);
+    // tube caps
+    rect(g, 5, 3, 5, 1, 1);
+    rect(g, 5, 11, 5, 1, 1);
+    // end wires
+    px(g, 6, 2, 1); px(g, 8, 2, 1);
+    px(g, 6, 12, 1); px(g, 8, 12, 1);
+    // inner glow column
+    rect(g, 6, 4, 3, 7, 3);
+    rect(g, 7, 4, 1, 7, 4);
+    // outer corona glow
+    px(g, 4, 5, 1); px(g, 4, 6, 1); px(g, 4, 7, 1); px(g, 4, 8, 1); px(g, 4, 9, 1);
+    px(g, 10, 5, 1); px(g, 10, 6, 1); px(g, 10, 7, 1); px(g, 10, 8, 1); px(g, 10, 9, 1);
+    return g;
+  }
+
+  // Ingot: metal bar for solid metals
+  function s_ingot() {
+    const g = blank();
+    // top face (parallelogram)
+    rect(g, 4, 4, 8, 2, 3);
+    px(g, 3, 5, 2); px(g, 11, 4, 2);
+    // body
+    rect(g, 3, 6, 9, 5, 2);
+    // bottom
+    rect(g, 3, 11, 9, 1, 1);
+    // side shading
+    for (let y = 6; y <= 10; y++) { px(g, 11, y, 1); }
+    // top highlight
+    rect(g, 5, 4, 5, 1, 4);
+    px(g, 5, 5, 3);
+    // outline left/bottom
+    for (let y = 6; y <= 11; y++) px(g, 3, y, 1);
+    px(g, 12, 5, 1);
+    return g;
+  }
+
+  // Vial / test tube: chemistry lab vessel for lanthanides/actinides
+  function s_vial() {
+    const g = blank();
+    // tube walls
+    rect(g, 5, 2, 1, 9, 1);
+    rect(g, 9, 2, 1, 9, 1);
+    // tube interior
+    rect(g, 6, 2, 4, 9, 2);
+    // rounded bottom
+    circle(g, 7, 11, 2, 2);
+    rect(g, 6, 11, 4, 1, 1);
+    px(g, 5, 11, 1); px(g, 9, 11, 1);
+    // stopper / cap
+    rect(g, 5, 1, 5, 1, 1);
+    rect(g, 6, 0, 3, 1, 1);
+    // liquid level
+    rect(g, 6, 7, 4, 4, 3);
+    px(g, 7, 7, 4); px(g, 8, 7, 4);
+    // bubble in liquid
+    px(g, 7, 9, 4); px(g, 8, 10, 4);
+    // shine on glass
+    px(g, 6, 3, 4); px(g, 6, 4, 3);
+    return g;
+  }
+
   // ---------- archetype registry + animation classes ----------
   const ARCHETYPES = {
-    drop:    { fn: s_drop,    anim: 'bob' },
-    flame:   { fn: s_flame,   anim: 'flicker' },
-    cube:    { fn: s_cube,    anim: 'shake-sub' },
-    cloud:   { fn: s_cloud,   anim: 'drift' },
-    crystal: { fn: s_crystal, anim: 'pulse' },
-    leaf:    { fn: s_leaf,    anim: 'sway' },
-    orb:     { fn: s_orb,     anim: 'breathe' },
-    star:    { fn: s_star,    anim: 'spin' },
-    bolt:    { fn: s_bolt,    anim: 'jitter' },
-    eye:     { fn: s_eye,     anim: 'blink' },
-    skull:   { fn: s_skull,   anim: 'creep' },
-    spiral:  { fn: s_spiral,  anim: 'spin' },
-    mountain:{ fn: s_mountain,anim: 'still' },
-    tree:    { fn: s_tree,    anim: 'sway' },
-    fish:    { fn: s_fish,    anim: 'swim' },
-    bird:    { fn: s_bird,    anim: 'flap' },
-    flower:  { fn: s_flower,  anim: 'sway' },
-    mushroom:{ fn: s_mushroom,anim: 'breathe' },
-    coin:    { fn: s_coin,    anim: 'flip' },
-    potion:  { fn: s_potion,  anim: 'bubble' },
-    sun:     { fn: s_sun,     anim: 'pulse' },
-    moon:    { fn: s_moon,    anim: 'breathe' },
-    brick:   { fn: s_brick,   anim: 'still' },
-    fang:    { fn: s_fang,    anim: 'jitter' },
-    swirl:   { fn: s_swirl,   anim: 'drift' },
-    gear:    { fn: s_gear,    anim: 'spin' },
-    seed:    { fn: s_seed,    anim: 'breathe' },
-    fruit:   { fn: s_fruit,   anim: 'bob' },
-    human:   { fn: s_human,   anim: 'breathe' },
-    wave:    { fn: s_wave,    anim: 'bob' },
-    blob:    { fn: s_blob,    anim: 'breathe' }
+    drop:        { fn: s_drop,        anim: 'bob' },
+    flame:       { fn: s_flame,       anim: 'flicker' },
+    cube:        { fn: s_cube,        anim: 'shake-sub' },
+    cloud:       { fn: s_cloud,       anim: 'drift' },
+    crystal:     { fn: s_crystal,     anim: 'pulse' },
+    leaf:        { fn: s_leaf,        anim: 'sway' },
+    orb:         { fn: s_orb,         anim: 'breathe' },
+    star:        { fn: s_star,        anim: 'spin' },
+    bolt:        { fn: s_bolt,        anim: 'jitter' },
+    eye:         { fn: s_eye,         anim: 'blink' },
+    skull:       { fn: s_skull,       anim: 'creep' },
+    spiral:      { fn: s_spiral,      anim: 'spin' },
+    mountain:    { fn: s_mountain,    anim: 'still' },
+    tree:        { fn: s_tree,        anim: 'sway' },
+    fish:        { fn: s_fish,        anim: 'swim' },
+    bird:        { fn: s_bird,        anim: 'flap' },
+    flower:      { fn: s_flower,      anim: 'sway' },
+    mushroom:    { fn: s_mushroom,    anim: 'breathe' },
+    coin:        { fn: s_coin,        anim: 'flip' },
+    potion:      { fn: s_potion,      anim: 'bubble' },
+    sun:         { fn: s_sun,         anim: 'pulse' },
+    moon:        { fn: s_moon,        anim: 'breathe' },
+    brick:       { fn: s_brick,       anim: 'still' },
+    fang:        { fn: s_fang,        anim: 'jitter' },
+    swirl:       { fn: s_swirl,       anim: 'drift' },
+    gear:        { fn: s_gear,        anim: 'spin' },
+    seed:        { fn: s_seed,        anim: 'breathe' },
+    fruit:       { fn: s_fruit,       anim: 'bob' },
+    human:       { fn: s_human,       anim: 'breathe' },
+    wave:        { fn: s_wave,        anim: 'bob' },
+    blob:        { fn: s_blob,        anim: 'breathe' },
+    // element-specific
+    atom:        { fn: s_atom,        anim: 'spin' },
+    bubble:      { fn: s_bubble,      anim: 'bob' },
+    magnet:      { fn: s_magnet,      anim: 'pulse' },
+    radioactive: { fn: s_radioactive, anim: 'spin' },
+    liquid:      { fn: s_liquid,      anim: 'bob' },
+    coil:        { fn: s_coil,        anim: 'jitter' },
+    prism:       { fn: s_prism,       anim: 'pulse' },
+    shield:      { fn: s_shield,      anim: 'shake-sub' },
+    spark:       { fn: s_spark,       anim: 'jitter' },
+    lantern:     { fn: s_lantern,     anim: 'breathe' },
+    ingot:       { fn: s_ingot,       anim: 'shake-sub' },
+    vial:        { fn: s_vial,        anim: 'bubble' }
+  };
+
+  // ---------- periodic table element → archetype mapping ----------
+  // Keyed by element name (lowercase). Chemistry-informed choices:
+  //   gas elements        → bubble / swirl / lantern (noble gases glow)
+  //   alkali metals       → spark (reactive, explode in water)
+  //   alkaline earth      → ingot (solid silvery metals)
+  //   transition metals   → ingot / gear / coin / magnet
+  //   post-transition     → liquid (low melting point) / ingot / shield
+  //   metalloids          → crystal / prism
+  //   nonmetals           → bubble / cloud / leaf / crystal
+  //   halogens            → vial (corrosive, stored in glass)
+  //   noble gases         → lantern (glow-discharge tubes)
+  //   lanthanides         → vial / magnet (rare earth magnets)
+  //   actinides           → radioactive
+  const PERIODIC_ARCH = {
+    // Period 1
+    hydrogen:       'bubble',
+    helium:         'lantern',
+    // Period 2
+    lithium:        'spark',
+    beryllium:      'ingot',
+    boron:          'crystal',
+    carbon:         'crystal',
+    nitrogen:       'bubble',
+    oxygen:         'bubble',
+    fluorine:       'vial',
+    neon:           'lantern',
+    // Period 3
+    sodium:         'spark',
+    magnesium:      'ingot',
+    aluminum:       'ingot',
+    silicon:        'crystal',
+    phosphorus:     'vial',
+    sulfur:         'crystal',
+    chlorine:       'vial',
+    argon:          'lantern',
+    // Period 4
+    potassium:      'spark',
+    calcium:        'ingot',
+    scandium:       'ingot',
+    titanium:       'gear',
+    vanadium:       'ingot',
+    chromium:       'ingot',
+    manganese:      'ingot',
+    iron:           'ingot',
+    cobalt:         'magnet',
+    nickel:         'coin',
+    copper:         'coin',
+    zinc:           'ingot',
+    gallium:        'liquid',
+    germanium:      'crystal',
+    arsenic:        'skull',
+    selenium:       'crystal',
+    bromine:        'vial',
+    krypton:        'lantern',
+    // Period 5
+    rubidium:       'spark',
+    strontium:      'ingot',
+    yttrium:        'ingot',
+    zirconium:      'ingot',
+    niobium:        'ingot',
+    molybdenum:     'gear',
+    technetium:     'radioactive',
+    ruthenium:      'ingot',
+    rhodium:        'coin',
+    palladium:      'coin',
+    silver:         'coin',
+    cadmium:        'ingot',
+    indium:         'liquid',
+    tin:            'ingot',
+    antimony:       'crystal',
+    tellurium:      'crystal',
+    iodine:         'vial',
+    xenon:          'lantern',
+    // Period 6
+    caesium:        'spark',
+    barium:         'ingot',
+    lanthanum:      'vial',
+    cerium:         'vial',
+    praseodymium:   'vial',
+    neodymium:      'magnet',
+    promethium:     'radioactive',
+    samarium:       'magnet',
+    europium:       'lantern',
+    gadolinium:     'magnet',
+    terbium:        'magnet',
+    dysprosium:     'magnet',
+    holmium:        'magnet',
+    erbium:         'vial',
+    thulium:        'vial',
+    ytterbium:      'vial',
+    lutetium:       'vial',
+    hafnium:        'gear',
+    tantalum:       'shield',
+    tungsten:       'ingot',
+    rhenium:        'ingot',
+    osmium:         'ingot',
+    iridium:        'coin',
+    platinum:       'coin',
+    gold:           'coin',
+    mercury:        'liquid',
+    thallium:       'skull',
+    lead:           'shield',
+    bismuth:        'prism',
+    polonium:       'radioactive',
+    astatine:       'vial',
+    radon:          'lantern',
+    // Period 7
+    francium:       'spark',
+    radium:         'radioactive',
+    actinium:       'radioactive',
+    thorium:        'radioactive',
+    protactinium:   'radioactive',
+    uranium:        'radioactive',
+    neptunium:      'radioactive',
+    plutonium:      'radioactive',
+    americium:      'radioactive',
+    curium:         'radioactive',
+    berkelium:      'radioactive',
+    californium:    'radioactive',
+    einsteinium:    'radioactive',
+    fermium:        'radioactive',
+    mendelevium:    'radioactive',
+    nobelium:       'radioactive',
+    lawrencium:     'radioactive',
+    rutherfordium:  'atom',
+    dubnium:        'atom',
+    seaborgium:     'atom',
+    bohrium:        'atom',
+    hassium:        'atom',
+    meitnerium:     'atom',
+    darmstadtium:   'atom',
+    roentgenium:    'atom',
+    copernicium:    'atom',
+    nihonium:       'atom',
+    flerovium:      'atom',
+    moscovium:      'atom',
+    livermorium:    'atom',
+    tennessine:     'atom',
+    oganesson:      'atom',
   };
 
   // ---------- element → archetype mapping ----------
@@ -662,6 +1061,8 @@
         return { arch: archetypeFor(base).arch, modifier: m };
       }
     }
+    // periodic table elements by lowercase name take priority
+    if (PERIODIC_ARCH[key]) return { arch: PERIODIC_ARCH[key], modifier: null };
     return { arch: ELEMENT_ARCH[key] || 'orb', modifier: null };
   }
 
