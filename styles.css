@@ -472,6 +472,18 @@
   .pa-mf-coil    .pa-f0 { animation: pa-mf2-a 0.8s steps(1) infinite; }
   .pa-mf-coil    .pa-f1 { animation: pa-mf2-b 0.8s steps(1) infinite; }
 
+  /* ── new science archetypes ── */
+  .pa-mf-helix   .pa-f0 { animation: pa-mf3-a 1.0s steps(1) infinite; }
+  .pa-mf-helix   .pa-f1 { animation: pa-mf3-b 1.0s steps(1) infinite; }
+  .pa-mf-helix   .pa-f2 { animation: pa-mf3-c 1.0s steps(1) infinite; }
+
+  .pa-mf-hex     .pa-f0 { animation: pa-mf3-a 1.6s steps(1) infinite; }
+  .pa-mf-hex     .pa-f1 { animation: pa-mf3-b 1.6s steps(1) infinite; }
+  .pa-mf-hex     .pa-f2 { animation: pa-mf3-c 1.6s steps(1) infinite; }
+
+  .pa-mf-pill    .pa-f0 { animation: pa-mf2-a 2.0s steps(1) infinite; }
+  .pa-mf-pill    .pa-f1 { animation: pa-mf2-b 2.0s steps(1) infinite; }
+
   @media (prefers-reduced-motion: reduce) {
     .pa-anim, .pa-overlay { animation: none !important; }
     .alc-pt-icon, .alc-lib-emoji { animation: none !important; }
@@ -1061,8 +1073,26 @@
     font-size: 22px;
     color: var(--tint);
     animation: spark-rot 2s linear infinite;
+    flex-shrink: 0;
   }
   @keyframes spark-rot { to { transform: rotate(360deg); } }
+
+  .alc-toast-fact {
+    font-size: 11.5px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    color: #4a4542;
+    line-height: 1.4;
+    margin-top: 4px;
+    max-width: 320px;
+    border-top: 1px solid color-mix(in srgb, var(--tint) 30%, transparent);
+    padding-top: 4px;
+    opacity: 0.9;
+  }
+  .alc-toast--fact {
+    max-width: 400px;
+    align-items: flex-start;
+  }
 
   /* ====================== help ====================== */
   .alc-help-backdrop {

@@ -153,10 +153,13 @@ function App() {
     });
   }, [discovered, tweaks.soundOn, discover]);
 
-  // dismiss toasts
+  // dismiss toasts — longer delay when a science fact is present
   useEffect(() => {
     if (!toasts.length) return;
-    const t = setTimeout(() => setToasts(prev => prev.slice(1)), 3200);
+    const first = toasts[0];
+    const hasFact = DB.META[first.key] && DB.META[first.key].fact;
+    const delay = hasFact ? 6500 : 3200;
+    const t = setTimeout(() => setToasts(prev => prev.slice(1)), delay);
     return () => clearTimeout(t);
   }, [toasts]);
 
