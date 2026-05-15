@@ -487,8 +487,33 @@ function App() {
     }
   }, [discovered.size]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // instances on the play area
-  const [instances, setInstances] = useState([]);
+  // instances on the play area — restored from localStorage on mount
+  const [instances, setInstances] = useState(() => {
+    const saved = JSON.parse(localStorage.getItem('alchemia.canvas') || '[]');
+    if (saved.length) {
+      return saved
+        .filter(i => i.key in DB.META)
+        .map(i => ({ id: uid(), key: i.key, x: i.x, y: i.y, born: Date.now(), dragging: false }));
+    }
+    if (!localStorage.getItem('alchemia.discovered')) {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      return [
+        { id: uid(), key: 'water', x: cx - 88, y: cy - 32, born: Date.now(), dragging: false },
+        { id: uid(), key: 'fire',  x: cx + 24,  y: cy - 32, born: Date.now(), dragging: false },
+      ];
+    }
+    return [];
+  });
+  useEffect(() => {
+    const t = setTimeout(() => {
+      localStorage.setItem('alchemia.canvas', JSON.stringify(
+        instances.map(i => ({ key: i.key, x: i.x, y: i.y }))
+      ));
+    }, 500);
+    return () => clearTimeout(t);
+  }, [instances]);
+
   // toasts
   const [toasts, setToasts] = useState([]);
   const toastTimersRef = useRef({});
@@ -642,7 +667,11 @@ function App() {
   }, []);
 
   // clear play area
-  const clearAll = () => setInstances([]);
+  const clearAll = () => {
+    setInstances([]);
+    localStorage.removeItem('alchemia.canvas');
+    window.dispatchEvent(new Event('alc:cleared'));
+  };
 
   // reset
   const resetAll = () => {
@@ -651,6 +680,7 @@ function App() {
     setInstances([]);
     setRecent([]);
     localStorage.removeItem('alchemia.discovered');
+    localStorage.removeItem('alchemia.canvas');
   };
 
   // counts
@@ -672,19 +702,10 @@ function App() {
         onHelp={() => setHelpOpen(true)}
         onReset={resetAll}
         onClear={clearAll}
-        libView={libView}
         musicOn={musicOn}
         sfxOn={sfxOn}
         onToggleMusic={() => setMusicOn(v => !v)}
         onToggleSfx={() => setSfxOn(v => !v)}
-        onCombos={() => {
-          setLibView(v => v === 'combos' ? 'elements' : 'combos');
-          // on mobile, snap the library open
-          if (window.innerWidth <= 900) {
-            const h = Math.round(window.innerHeight * 0.55);
-            document.documentElement.style.setProperty('--lib-h', h + 'px');
-          }
-        }}
       />
 
       <PlayArea

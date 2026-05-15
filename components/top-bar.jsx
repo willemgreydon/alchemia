@@ -1,5 +1,5 @@
 // ============ top bar ============
-function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onReset, onClear, libView, onCombos, musicOn, sfxOn, onToggleMusic, onToggleSfx }) {
+function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onReset, onClear, musicOn, sfxOn, onToggleMusic, onToggleSfx }) {
   return (
     <div className="alc-topbar">
       <div className="alc-brand">
@@ -28,9 +28,9 @@ function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onRese
         <button className="alc-btn alc-btn-icon" onClick={onToggleSfx} title={sfxOn ? 'Mute sound effects' : 'Unmute sound effects'}>
           <PixelSpeaker muted={!sfxOn} />
         </button>
-        <button className="alc-btn" onClick={onClear} title="Clear play area">CLEAR</button>
-        <button className={`alc-btn alc-top-combos-btn${libView === 'combos' ? ' alc-btn-active' : ''}`} onClick={onCombos}>COMBOS</button>
         <button className="alc-btn" title="How to play" onClick={onHelp}>HELP</button>
+        <span className="alc-actions-divider" />
+        <button className="alc-btn alc-btn-ghost" onClick={onClear} title="Clear play area">CLEAR</button>
         <button className="alc-btn alc-btn-ghost" onClick={onReset} title="Reset all progress">⟲</button>
       </div>
     </div>

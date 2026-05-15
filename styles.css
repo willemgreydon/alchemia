@@ -170,6 +170,7 @@
   .alc-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
   .alc-btn-ghost { background: transparent; box-shadow: none; }
   .alc-btn-ghost:hover { background: var(--paper); }
+  .alc-actions-divider { width: 1px; background: var(--ink); align-self: stretch; margin: 4px 4px; opacity: 0.4; }
   .alc-btn-icon {
     padding: 6px;
     width: 36px;
