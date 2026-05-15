@@ -1,6 +1,6 @@
 // ============ play area ============
 const PlayArea = React.forwardRef(function PlayArea(props, ref) {
-  const { instances, setInstances, combine, remove, fx, labelsAlways } = props;
+  const { instances, setInstances, combine, remove, fx, labelsAlways, onPickup } = props;
   const localRef = React.useRef(null);
   const areaRef = ref || localRef;
 
@@ -19,6 +19,7 @@ const PlayArea = React.forwardRef(function PlayArea(props, ref) {
       offsetY: e.clientY - rect.top - inst.y,
       moved: false
     };
+    if (onPickup) onPickup();
     setInstances(prev => prev.map(i => i.id === inst.id ? { ...i, dragging: true, z: Date.now() } : i));
   };
 
