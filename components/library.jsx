@@ -61,6 +61,73 @@ function fantasyName(key) {
   return s + m + e;
 }
 
+function ElementDetail({ elKey, onClose }) {
+  const meta = DB.META[elKey] || {};
+  const pt = window.PeriodicTable?.BY_NAME[elKey?.toLowerCase()];
+  const recipes = DB.RECIPES.filter(r => r.r === elKey);
+
+  React.useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div className="alc-detail-backdrop" onPointerDown={onClose}>
+      <div className="alc-detail-sheet" onPointerDown={e => e.stopPropagation()} style={{ '--tint': meta.c }}>
+        <button className="alc-detail-close" onClick={onClose} aria-label="Close">&times;</button>
+        <div className="alc-detail-icon"><PixelIcon elKey={elKey} /></div>
+        <div className="alc-detail-name">{DB.displayName(elKey)}</div>
+        {pt && (
+          <div className="alc-detail-pt">
+            <div className="alc-detail-pt-row">
+              <span className="alc-detail-pt-label">Atomic number</span>
+              <span className="alc-detail-pt-value">{pt.z}</span>
+            </div>
+            <div className="alc-detail-pt-row">
+              <span className="alc-detail-pt-label">Symbol</span>
+              <span className="alc-detail-pt-value">{pt.sym}</span>
+            </div>
+            <div className="alc-detail-pt-row">
+              <span className="alc-detail-pt-label">Category</span>
+              <span className="alc-detail-pt-value">{pt.cat}</span>
+            </div>
+            <div className="alc-detail-pt-row">
+              <span className="alc-detail-pt-label">State</span>
+              <span className="alc-detail-pt-value">{pt.state}</span>
+            </div>
+            <div className="alc-detail-pt-row">
+              <span className="alc-detail-pt-label">Atomic weight</span>
+              <span className="alc-detail-pt-value">{pt.weight}</span>
+            </div>
+            <div className="alc-detail-pt-row">
+              <span className="alc-detail-pt-label">Electron shells</span>
+              <span className="alc-detail-pt-value">{pt.shells.join(' · ')}</span>
+            </div>
+          </div>
+        )}
+        <div className="alc-detail-section-label">Recipe</div>
+        {recipes.length === 0 ? (
+          <div className="alc-detail-recipes-empty">Occurs in nature</div>
+        ) : (
+          <div className="alc-detail-recipes">
+            {recipes.map((r, i) => (
+              <div key={i} className="alc-detail-recipe">
+                <div className="alc-detail-recipe-icon"><PixelIcon elKey={r.a} /></div>
+                <div className="alc-detail-recipe-op">+</div>
+                <div className="alc-detail-recipe-icon"><PixelIcon elKey={r.b} /></div>
+              </div>
+            ))}
+          </div>
+        )}
+        {meta.fact && (
+          <div className="alc-detail-fact">{meta.fact}</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function LibCard({ elKey, unknown, onPointerDown }) {
   const meta = DB.META[elKey] || { e: '?', c: '#888', t: 0 };
   const pt = window.PeriodicTable?.BY_NAME[elKey?.toLowerCase()];
@@ -92,6 +159,9 @@ function LibCard({ elKey, unknown, onPointerDown }) {
 }
 
 function Library({ discovered, search, setSearch, filter, setFilter, libView: view, setLibView: setView, recent, recentKeys = new Set(), spawn, playRef, fx }) {
+
+  const [detailKey, setDetailKey] = React.useState(null);
+  const closeDetail = React.useCallback(() => setDetailKey(null), []);
 
   const [comboSearch, setComboSearch] = React.useState('');
   const [comboUndiscOnly, setComboUndiscOnly] = React.useState(false);
@@ -294,17 +364,23 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
       detail: { key: d.key, clientX: e.clientX, clientY: e.clientY }
     }));
     const moved = Math.hypot(e.clientX - d.startX, e.clientY - d.startY);
-    if (moved < 8 && playRef.current) {
-      const rect = playRef.current.getBoundingClientRect();
-      const off = spiralOffset(++_spawnCounter);
-      const x = rect.width / 2 - 32 + off.x;
-      const y = rect.height / 2 - 32 + off.y;
-      window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: d.key, x, y } }));
+    if (moved < 8) {
+      if (view === 'elements') {
+        setDetailKey(d.key);
+      } else if (playRef.current) {
+        const rect = playRef.current.getBoundingClientRect();
+        const off = spiralOffset(++_spawnCounter);
+        const x = rect.width / 2 - 32 + off.x;
+        const y = rect.height / 2 - 32 + off.y;
+        window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: d.key, x, y } }));
+      }
     }
     dragRef.current = null;
   };
 
   return (
+    <>
+    {detailKey && <ElementDetail elKey={detailKey} onClose={closeDetail} />}
     <div className="alc-library" onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp}>
       <div className="alc-lib-handle" ref={handleRef}>
         <div className="alc-lib-handle-pill" />
@@ -451,5 +527,6 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
         </div>
       </div>
     </div>
+    </>
   );
 }

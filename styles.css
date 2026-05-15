@@ -1308,6 +1308,136 @@
     opacity: 0.5;
   }
 
+  /* ====================== element detail sheet ====================== */
+  .alc-detail-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(14,14,14,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .alc-detail-sheet {
+    position: relative;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 28px 24px 24px;
+    width: min(480px, 92vw);
+    max-height: 80vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .alc-detail-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+  }
+  .alc-detail-close:hover { opacity: 1; }
+  .alc-detail-icon {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+  .alc-detail-icon .alc-pixel { width: 64px; height: 64px; }
+  .alc-detail-icon .alc-pixel svg { width: 64px; height: 64px; }
+  .alc-detail-name {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .alc-detail-pt {
+    width: 100%;
+    border: 1.5px solid var(--ink);
+    background: var(--paper-2);
+  }
+  .alc-detail-pt-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 10px;
+    border-bottom: 1px solid rgba(14,14,14,0.15);
+    gap: 8px;
+  }
+  .alc-detail-pt-row:last-child { border-bottom: none; }
+  .alc-detail-pt-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .alc-detail-pt-value {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+  }
+  .alc-detail-section-label {
+    width: 100%;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(14,14,14,0.2);
+  }
+  .alc-detail-recipes {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .alc-detail-recipe {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alc-detail-recipe-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+  .alc-detail-recipe-icon .alc-pixel { width: 32px; height: 32px; }
+  .alc-detail-recipe-icon .alc-pixel svg { width: 32px; height: 32px; }
+  .alc-detail-recipe-op {
+    font-size: 16px;
+    font-weight: 700;
+    opacity: 0.5;
+  }
+  .alc-detail-recipes-empty {
+    font-size: 12px;
+    opacity: 0.55;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .alc-detail-fact {
+    width: 100%;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    background: var(--paper-2);
+    border-left: 3px solid var(--orange);
+    padding: 8px 10px;
+  }
+
   /* ====================== responsive ====================== */
   @media (max-width: 900px) {
     /* Keep the original 3-col grid but collapse to ~54px by hiding tall items */
@@ -1374,6 +1504,17 @@
     /* Toasts just below topbar */
     .alc-toasts { top: 64px; left: 12px; }
     .alc-toast { min-width: 220px; }
+
+    /* Detail sheet — full-width bottom sheet on mobile */
+    .alc-detail-backdrop { align-items: flex-end; }
+    .alc-detail-sheet {
+      width: 100%;
+      max-height: 75vh;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      box-shadow: 0 -4px 0 var(--ink);
+    }
   }
 
   @media (max-width: 600px) {
