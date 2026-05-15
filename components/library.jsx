@@ -6,23 +6,40 @@ function spiralOffset(n) {
   return { x: r * Math.cos(theta), y: r * Math.sin(theta) };
 }
 
-// formula complexity score: element-type count × 3 + sum of subscript digit values
-// falls back to tier for conceptual elements without a chemical formula
+// formula complexity score:
+//   primary   — number of distinct element types (fewer = simpler: H₂ < H₂O)
+//   secondary — sum of (atomic number Z × stoichiometric count) per element (H₂ < O₃ because Z(H)=1 < Z(O)=8)
+//   fallback  — conceptual/no-formula elements sorted by game tier
 function formulaComplexity(key) {
   const meta = DB.META[key];
   if (!meta) return 0;
   const name = meta.displayName || '';
-  const match = name.match(/\(([^)]+)\)$/);
-  if (!match) return (meta.t || 0) * 2;
+  // grab the last (...) block — handles nested parens like Ca(OH)₂ by greedy match
+  const match = name.match(/\((.+)\)\s*$/);
+  if (!match) return (meta.t || 0) * 100000 + 50000; // conceptual elements grouped by tier
+
   const formula = match[1];
   const SUB = '₀₁₂₃₄₅₆₇₈₉';
-  const elementTypes = (formula.match(/[A-Z]/g) || []).length;
-  let subscriptSum = 0;
+  let ascii = '';
   for (const ch of formula) {
-    const idx = SUB.indexOf(ch);
-    if (idx >= 0) subscriptSum += idx;
+    const i = SUB.indexOf(ch);
+    ascii += i >= 0 ? String(i) : ch;
   }
-  return elementTypes * 3 + subscriptSum;
+
+  // extract [ElementSymbol, count] pairs; parenthesised groups lose their multiplier
+  // but the approximation is fine for sort ordering
+  const BY_SYM = window.PeriodicTable?.BY_SYMBOL || {};
+  let elementTypes = 0;
+  let weightedZ = 0;
+  const seen = new Set();
+  for (const [, sym, n] of ascii.matchAll(/([A-Z][a-z]?)(\d*)/g)) {
+    const z = BY_SYM[sym]?.z ?? 50; // fallback for unknowns (mid-table)
+    const count = n ? parseInt(n) : 1;
+    if (!seen.has(sym)) { seen.add(sym); elementTypes++; }
+    weightedZ += z * count;
+  }
+
+  return elementTypes * 10000 + weightedZ;
 }
 
 // deterministic fantasy name from element key — same key always gets same mystery name
