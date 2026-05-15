@@ -528,8 +528,17 @@ function App() {
   const [filter, setFilter] = useState('all'); // all | new | locked
   const [libView, setLibView] = useState('elements'); // elements | combos
 
-  // recent unlocks
-  const [recent, setRecent] = useState([]);
+  // recent unlocks (persisted so RECENT filter survives page refresh)
+  const [recent, setRecent] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('alchemia.recent') || '[]');
+      if (Array.isArray(stored)) return stored.filter(k => k in DB.META).slice(0, 8);
+    } catch (e) {}
+    return [];
+  });
+  useEffect(() => {
+    localStorage.setItem('alchemia.recent', JSON.stringify(recent));
+  }, [recent]);
   const recentTimestamps = useRef(new Map());
   const [recentTick, setRecentTick] = useState(0);
   useEffect(() => {
@@ -686,6 +695,7 @@ function App() {
     setRecent([]);
     localStorage.removeItem('alchemia.discovered');
     localStorage.removeItem('alchemia.canvas');
+    localStorage.removeItem('alchemia.recent');
   };
 
   // counts

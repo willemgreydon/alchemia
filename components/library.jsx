@@ -498,7 +498,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
           >UNKNOWN</button>
         </div>
       )}
-      {view === 'elements' && recent.length > 0 && (
+      {view === 'elements' && recent.length > 0 && libFilter !== 'recent' && (
         <div className="alc-recent">
           <div className="alc-recent-label">RECENT</div>
           <div className="alc-recent-row">

@@ -120,7 +120,10 @@ const PlayArea = React.forwardRef(function PlayArea(props, ref) {
     >
       {instances.length === 0 && (
         <div className="alc-empty">
-          <div className="alc-empty-glyph">◐◑◒◓</div>
+          <div className="alc-empty-demo">
+            <div className="alc-empty-demo-tile alc-empty-demo-tile--left" />
+            <div className="alc-empty-demo-tile alc-empty-demo-tile--right" />
+          </div>
           <div className="alc-empty-title">drag two elements together</div>
           <div className="alc-empty-sub">to discover what happens</div>
           <div className="alc-empty-arrow" />

@@ -201,17 +201,35 @@
     pointer-events: none;
     opacity: 0.45;
   }
-  .alc-empty-glyph {
-    font-family: 'Pixelify Sans', monospace;
-    font-size: 60px;
-    letter-spacing: 0.2em;
-    color: var(--ink);
-    animation: glyph-spin 12s linear infinite;
+  .alc-empty-demo {
+    display: flex; align-items: center; gap: 12px;
+    position: relative; height: 32px;
   }
-  @keyframes glyph-spin {
-    0% { letter-spacing: 0.2em; }
-    50% { letter-spacing: 0.45em; }
-    100% { letter-spacing: 0.2em; }
+  .alc-empty-demo-tile {
+    width: 32px; height: 32px;
+    background: var(--tint);
+    border: 2px solid var(--ink);
+    flex-shrink: 0;
+  }
+  .alc-empty-demo-tile--left {
+    animation: alc-demo-slide-left 3s ease-in-out infinite;
+  }
+  .alc-empty-demo-tile--right {
+    animation: alc-demo-slide-right 3s ease-in-out infinite;
+  }
+  @keyframes alc-demo-slide-left {
+    0%   { transform: translateX(-40px); opacity: 1; }
+    20%  { transform: translateX(0);     opacity: 1; }
+    60%  { transform: translateX(0);     opacity: 1; }
+    80%  { transform: translateX(0);     opacity: 0; }
+    100% { transform: translateX(-40px); opacity: 0; }
+  }
+  @keyframes alc-demo-slide-right {
+    0%   { transform: translateX(40px);  opacity: 1; }
+    20%  { transform: translateX(0);     opacity: 1; }
+    60%  { transform: translateX(0);     opacity: 1; }
+    80%  { transform: translateX(0);     opacity: 0; }
+    100% { transform: translateX(40px);  opacity: 0; }
   }
   .alc-empty-title {
     font-family: 'Pixelify Sans', monospace;
@@ -898,6 +916,7 @@
     padding: 8px 12px 18px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    align-items: start;
     column-gap: 8px;
     row-gap: 30px;
     scrollbar-width: thin;
@@ -1222,11 +1241,12 @@
   }
   .alc-ticker-refresh {
     cursor: pointer;
-    background: none;
-    border: none;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
     color: inherit;
     font-size: 14px;
-    padding: 0 4px;
+    padding: 3px 7px;
     line-height: 1;
     flex-shrink: 0;
   }
@@ -1669,10 +1689,6 @@
     .alc-help-body { font-size: 12px; }
     .alc-help-start { padding: 10px 20px; font-size: 16px; }
     .alc-help-footnote { font-size: 10px; }
-
-    /* COMBOS button: collapse to glyph on narrow viewports */
-    .alc-top-combos-btn { font-size: 0; padding: 4px 10px; }
-    .alc-top-combos-btn::before { content: '\229E'; font-size: 14px; }
 
     /* Toasts compact */
     .alc-toasts { top: 60px; left: 8px; }
