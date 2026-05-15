@@ -91,11 +91,36 @@ const PlayArea = React.forwardRef(function PlayArea(props, ref) {
           data.clientY < rect.top || data.clientY > rect.bottom) return;
       const x = Math.max(0, Math.min(rect.width - 64, data.clientX - rect.left - 32));
       const y = Math.max(0, Math.min(rect.height - 64, data.clientY - rect.top - 32));
-      window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: data.key, x, y } }));
+
+      // Check whether the drop lands on top of an existing canvas element.
+      // If it does, spawn the new element and immediately combine — all in one
+      // setInstances call so the new element never needs to be in state first.
+      const TILE = 64;
+      const dropCX = x + TILE / 2;
+      const dropCY = y + TILE / 2;
+      setInstances(prev => {
+        const target = prev.find(i => {
+          const cx = i.x + TILE / 2;
+          const cy = i.y + TILE / 2;
+          return Math.hypot(cx - dropCX, cy - dropCY) < TILE * 1.15;
+        });
+
+        if (target) {
+          // Spawn and combine in the same tick — no timing issue possible.
+          const newId = uid();
+          const newInst = { id: newId, key: data.key, x, y, born: Date.now() };
+          // defer the combine call so it runs after this state update settles
+          setTimeout(() => combine(newId, target.id), 0);
+          return [...prev, newInst];
+        }
+
+        // No target under drop point — plain spawn.
+        return [...prev, { id: uid(), key: data.key, x, y, born: Date.now() }];
+      });
     };
     window.addEventListener('alchemia:librarydrop', onDrop);
     return () => window.removeEventListener('alchemia:librarydrop', onDrop);
-  }, []);
+  }, [combine]);
 
   // listen for spawn events
   React.useEffect(() => {
