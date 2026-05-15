@@ -69,7 +69,7 @@ const PlayArea = React.forwardRef(function PlayArea(props, ref) {
         if (i.id === d.id) return false;
         const cx = i.x + TILE/2;
         const cy = i.y + TILE/2;
-        return Math.hypot(cx - (me.x + TILE/2), cy - (me.y + TILE/2)) < TILE * 0.9;
+        return Math.hypot(cx - (me.x + TILE/2), cy - (me.y + TILE/2)) < TILE * 1.15;
       });
       if (target) {
         // defer combine to next tick so we don't recurse

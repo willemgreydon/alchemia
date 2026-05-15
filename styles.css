@@ -536,7 +536,7 @@
   .alc-tile-wrap.is-dragging .alc-tile { box-shadow: 6px 6px 0 var(--ink); transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 4px 0 rgba(14, 14, 14, 0.4)); }
   .alc-tile {
     position: relative;
-    width: 88px; height: 64px;
+    width: 64px; height: 64px;
     background: var(--paper);
     border: 2px solid var(--ink);
     box-shadow: 3px 3px 0 var(--ink);
