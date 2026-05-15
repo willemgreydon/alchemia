@@ -475,6 +475,9 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                           const y = rect.height / 2 - 32;
                           window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: a, x: rect.width / 2 - 80, y } }));
                           window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: b, x: rect.width / 2 + 16, y } }));
+                          if (window.innerWidth <= 900) {
+                            document.documentElement.style.setProperty('--lib-h', SNAP_DEFAULT + 'px');
+                          }
                         }}
                       >&#9654;</button>
                     )}

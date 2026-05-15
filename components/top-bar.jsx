@@ -30,7 +30,7 @@ function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onRese
         </button>
         <button className="alc-btn" onClick={onClear} title="Clear play area">CLEAR</button>
         <button className={`alc-btn alc-top-combos-btn${libView === 'combos' ? ' alc-btn-active' : ''}`} onClick={onCombos}>COMBOS</button>
-        <button className="alc-btn" onClick={onHelp}>HOW</button>
+        <button className="alc-btn" title="How to play" onClick={onHelp}>HELP</button>
         <button className="alc-btn alc-btn-ghost" onClick={onReset} title="Reset all progress">⟲</button>
       </div>
     </div>
