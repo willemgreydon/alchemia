@@ -1,5 +1,24 @@
 // ============ top bar ============
-function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onReset, onClear, libView, onCombos }) {
+function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onReset, onClear, libView, onCombos, confirmReset, setConfirmReset, onResetConfirmed }) {
+  const timerRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!confirmReset) return;
+    timerRef.current = setTimeout(() => setConfirmReset(false), 4000);
+    return () => clearTimeout(timerRef.current);
+  }, [confirmReset]);
+
+  const handleConfirm = () => {
+    clearTimeout(timerRef.current);
+    onResetConfirmed();
+    setConfirmReset(false);
+  };
+
+  const handleCancel = () => {
+    clearTimeout(timerRef.current);
+    setConfirmReset(false);
+  };
+
   return (
     <div className="alc-topbar">
       <div className="alc-brand">
@@ -21,7 +40,14 @@ function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onRese
         <button className="alc-btn" onClick={onClear} title="Clear play area">CLEAR</button>
         <button className={`alc-btn${libView === 'combos' ? ' alc-btn-active' : ''}`} onClick={onCombos}>COMBOS</button>
         <button className="alc-btn" onClick={onHelp}>HOW</button>
-        <button className="alc-btn alc-btn-ghost" onClick={onReset} title="Reset progress">⟲</button>
+        {confirmReset ? (
+          <>
+            <button className="alc-btn alc-btn--danger" onClick={handleConfirm} title="Confirm reset">CONFIRM ×</button>
+            <button className="alc-btn" onClick={handleCancel}>CANCEL</button>
+          </>
+        ) : (
+          <button className="alc-btn alc-btn-ghost" onClick={onReset} title="Reset progress">⟲</button>
+        )}
       </div>
     </div>
   );

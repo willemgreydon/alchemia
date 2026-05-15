@@ -148,17 +148,22 @@ function App() {
       }
 
       const next = prev.filter(i => i.id !== aId && i.id !== bId);
-      next.push({ id: uid(), key: result, x: mx, y: my, born: Date.now() });
+      next.push({ id: uid(), key: result, x: mx, y: my, born: Date.now(), firstDiscovery: !wasDiscovered });
       return next;
     });
   }, [discovered, tweaks.soundOn, discover]);
+
+  // early dismiss — player clicks or swipes left on a toast
+  const dismissToast = useCallback((id) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
 
   // dismiss toasts — longer delay when a science fact is present
   useEffect(() => {
     if (!toasts.length) return;
     const first = toasts[0];
     const hasFact = DB.META[first.key] && DB.META[first.key].fact;
-    const delay = hasFact ? 6500 : 3200;
+    const delay = hasFact ? 8000 : 4500;
     const t = setTimeout(() => setToasts(prev => prev.slice(1)), delay);
     return () => clearTimeout(t);
   }, [toasts]);
@@ -183,8 +188,9 @@ function App() {
   const clearAll = () => setInstances([]);
 
   // reset
-  const resetAll = () => {
-    if (!confirm('Erase all discoveries? You will start from the 118 periodic table elements.')) return;
+  const [confirmReset, setConfirmReset] = useState(false);
+  const resetAll = () => setConfirmReset(true);
+  const onResetConfirmed = () => {
     setDiscovered(new Set(DB.STARTERS));
     setInstances([]);
     setRecent([]);
@@ -209,6 +215,9 @@ function App() {
         progress={progress}
         onHelp={() => setHelpOpen(true)}
         onReset={resetAll}
+        confirmReset={confirmReset}
+        setConfirmReset={setConfirmReset}
+        onResetConfirmed={onResetConfirmed}
         onClear={clearAll}
         libView={libView}
         onCombos={() => {
@@ -249,7 +258,7 @@ function App() {
         <HintTicker discovered={discovered} recent={recent} total={total} />
       )}
 
-      <Toasts toasts={toasts} />
+      <Toasts toasts={toasts} onDismiss={dismissToast} />
 
       {helpOpen && <Help onClose={closeHelp} totalRecipes={totalRecipes} />}
     </div>

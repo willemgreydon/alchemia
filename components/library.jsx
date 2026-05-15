@@ -67,11 +67,16 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
       );
     }
     if (comboUndiscOnly) list = list.filter(({ r }) => !discovered.has(r));
-    // undiscovered results first, then alphabetical by result
+    // sort: undiscovered first (by how many inputs are available: 2→1→0), then discovered last
     list.sort((x, y) => {
       const xDisc = discovered.has(x.r) ? 1 : 0;
       const yDisc = discovered.has(y.r) ? 1 : 0;
       if (xDisc !== yDisc) return xDisc - yDisc;
+      if (xDisc === 0) {
+        const xAvail = (discovered.has(x.a) ? 1 : 0) + (discovered.has(x.b) ? 1 : 0);
+        const yAvail = (discovered.has(y.a) ? 1 : 0) + (discovered.has(y.b) ? 1 : 0);
+        if (xAvail !== yAvail) return yAvail - xAvail; // more available inputs first
+      }
       return x.r.localeCompare(y.r);
     });
     return list;
@@ -295,7 +300,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
             {recent.slice(0, 6).map((k, i) => {
               const m = DB.META[k] || { e: '?', c: '#888' };
               return (
-                <div key={i} className="alc-recent-dot" title={DB.displayName(k)}>
+                <div key={i} className="alc-recent-dot" title={DB.displayName(k)} onPointerDown={(e) => onItemPointerDown(e, k)}>
                   <PixelIcon elKey={k} />
                 </div>
               );

@@ -146,6 +146,7 @@ function Tile({ inst, onPointerDown, onRemove, labelsAlways }) {
   const age = Date.now() - (inst.born || 0);
   const isNew = age < 600;
   const isShaking = inst.shake && Date.now() - inst.shake < 400;
+  const isFirstDiscovery = inst.firstDiscovery === true && age < 700;
   return (
     <div
       data-inst-id={inst.id}
@@ -158,7 +159,7 @@ function Tile({ inst, onPointerDown, onRemove, labelsAlways }) {
       onContextMenu={(e) => { e.preventDefault(); onRemove(); }}
     >
       <div
-        className={`alc-tile ${isNew ? 'is-new' : ''} ${isShaking ? 'is-shake' : ''}`}
+        className={`alc-tile ${isNew ? 'is-new' : ''} ${isShaking ? 'is-shake' : ''} ${isFirstDiscovery ? 'is-first-discovery' : ''}`}
         style={{ '--tint': meta.c }}
       >
         <div className="alc-tile-emoji"><PixelIcon elKey={inst.key} /></div>

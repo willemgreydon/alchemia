@@ -127,6 +127,8 @@
   .alc-btn-ghost:hover { background: var(--paper); }
   .alc-btn-active { background: var(--ink); color: var(--paper); box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
   .alc-btn-active:hover { background: var(--ink); box-shadow: 3px 3px 0 rgba(0,0,0,0.3); }
+  .alc-btn--danger { background: #c0392b; color: #fff; border-color: #922b21; box-shadow: 2px 2px 0 #7b241c; }
+  .alc-btn--danger:hover { background: #e74c3c; box-shadow: 4px 4px 0 #7b241c; }
 
   /* ====================== play area ====================== */
   .alc-playarea {
@@ -498,7 +500,7 @@
     top: 0; left: 0;
   }
   .alc-tile-wrap.is-dragging { cursor: grabbing; z-index: 999; }
-  .alc-tile-wrap.is-dragging .alc-tile { box-shadow: 6px 6px 0 var(--ink); transform: scale(1.05); }
+  .alc-tile-wrap.is-dragging .alc-tile { box-shadow: 6px 6px 0 var(--ink); transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 4px 0 rgba(14, 14, 14, 0.4)); }
   .alc-tile {
     position: relative;
     width: 64px; height: 64px;
@@ -506,7 +508,7 @@
     border: 2px solid var(--ink);
     box-shadow: 3px 3px 0 var(--ink);
     display: flex; align-items: center; justify-content: center;
-    transition: box-shadow 0.12s, transform 0.12s;
+    transition: box-shadow 0.12s, transform 0.12s, filter 0.12s;
     --tint: var(--gold);
   }
   .alc-tile::before {
@@ -558,6 +560,12 @@
     transition: opacity 0.15s;
     cursor: pointer;
   }
+  .alc-tile-x::before {
+    content: '';
+    position: absolute;
+    inset: -13px;
+    display: block;
+  }
   .alc-tile-wrap:hover .alc-tile-x { opacity: 1; }
   .alc-tile.is-new {
     animation: tile-pop 0.55s cubic-bezier(.34,1.6,.4,1);
@@ -568,6 +576,11 @@
     100% { transform: scale(1) rotate(0); opacity: 1; }
   }
   .alc-tile.is-shake { animation: tile-shake 0.4s ease-in-out; }
+  .alc-tile.is-first-discovery { animation: tile-pop 0.55s cubic-bezier(.34,1.6,.4,1), alc-glow-ring 0.6s ease-out forwards; }
+  @keyframes alc-glow-ring {
+    0% { box-shadow: 0 0 0 0px var(--tint); }
+    100% { box-shadow: 0 0 0 24px transparent; }
+  }
   @keyframes tile-shake {
     0%, 100% { transform: translateX(0); }
     20%, 60% { transform: translateX(-6px) rotate(-2deg); }
@@ -1046,9 +1059,9 @@
     flex-direction: column;
     gap: 10px;
     z-index: 20;
-    pointer-events: none;
   }
   .alc-toast {
+    cursor: pointer;
     display: flex; align-items: center; gap: 14px;
     background: var(--paper);
     border: 2px solid var(--ink);
