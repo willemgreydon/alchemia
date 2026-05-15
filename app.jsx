@@ -689,7 +689,7 @@ function App() {
 
   // reset
   const resetAll = () => {
-    if (!window.confirm('Reset all progress? All your discovered elements will be lost.')) return;
+    if (!window.confirm('Reset everything? Every discovered element will be gone. You\'ll start fresh from the four base elements.')) return;
     setDiscovered(new Set(DB.STARTERS));
     setInstances([]);
     setRecent([]);

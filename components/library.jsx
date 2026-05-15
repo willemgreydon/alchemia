@@ -113,9 +113,15 @@ function ElementDetail({ elKey, onClose }) {
           <div className="alc-detail-recipes">
             {recipes.map((r, i) => (
               <div key={i} className="alc-detail-recipe">
-                <div className="alc-detail-recipe-icon"><PixelIcon elKey={r.a} /></div>
+                <div className="alc-detail-recipe-ingredient">
+                  <div className="alc-detail-recipe-icon"><PixelIcon elKey={r.a} /></div>
+                  <div className="alc-detail-recipe-iname">{DB.displayName(r.a).replace(/\s*\(.*\)\s*$/, '')}</div>
+                </div>
                 <div className="alc-detail-recipe-op">+</div>
-                <div className="alc-detail-recipe-icon"><PixelIcon elKey={r.b} /></div>
+                <div className="alc-detail-recipe-ingredient">
+                  <div className="alc-detail-recipe-icon"><PixelIcon elKey={r.b} /></div>
+                  <div className="alc-detail-recipe-iname">{DB.displayName(r.b).replace(/\s*\(.*\)\s*$/, '')}</div>
+                </div>
               </div>
             ))}
           </div>
@@ -519,8 +525,8 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
             combos.length === 0 ? (
               <div className="alc-lib-empty">
                 {comboUndiscOnly && DB.RECIPES.length > 0
-                  ? "You've found every combination."
-                  : <>No combinations yet.<br/>Combine elements to unlock recipes.</>}
+                  ? "You've discovered every combination. The lab is complete."
+                  : <>No combinations yet — drop elements on top of each other on the play area to unlock recipes.</>}
               </div>
             ) : (
               <>
@@ -563,34 +569,38 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                 if (pt) {
                   const stateAbbr = { solid: 's', liquid: 'l', gas: 'g' }[pt.state] || '';
                   return (
-                    <div
-                      key={key}
-                      className={`alc-lib-item alc-lib-item--pt${recentKeys.has(key) ? ' is-recent' : ''}${newlyDiscovered.has(key) ? ' is-new-discovery' : ''}`}
-                      data-tier={meta.t}
-                      onPointerDown={(e) => onItemPointerDown(e, key)}
-                      style={{ '--tint': meta.c }}
-                      title={`${pt.name} — ${pt.cat}`}
-                    >
-                      <div className="alc-pt-z">{pt.z}</div>
-                      <div className="alc-pt-state">{stateAbbr}</div>
-                      <div className="alc-pt-icon"><PixelIcon elKey={key} /></div>
-                      <div className="alc-pt-name">{pt.name}</div>
-                      <div className="alc-pt-weight">{pt.weight}</div>
-                      <div className="alc-pt-shells">{pt.shells.join('·')}</div>
+                    <div key={key} className="alc-card-wrap" onPointerDown={(e) => onItemPointerDown(e, key)} title={`${pt.name} — ${pt.cat}`}>
+                      <div
+                        className={`alc-lib-item alc-lib-item--pt${recentKeys.has(key) ? ' is-recent' : ''}${newlyDiscovered.has(key) ? ' is-new-discovery' : ''}`}
+                        data-tier={meta.t}
+                        style={{ '--tint': meta.c }}
+                      >
+                        <div className="alc-pt-z">{pt.z}</div>
+                        <div className="alc-pt-sym">{pt.sym}</div>
+                        <div className="alc-pt-icon"><PixelIcon elKey={key} /></div>
+                        <div className="alc-pt-weight">{pt.weight}</div>
+                        <div className="alc-pt-shells">{pt.shells.join('·')}</div>
+                        <div className="alc-pt-state">{stateAbbr}</div>
+                      </div>
+                      <div className="alc-card-name">{pt.name}</div>
                     </div>
                   );
                 }
+                const dn = DB.displayName(key);
+                const fmMatch = dn.match(/\((.+)\)\s*$/);
+                const formula = fmMatch ? fmMatch[1] : null;
+                const shortName = fmMatch ? dn.replace(/\s*\(.*\)\s*$/, '') : dn;
                 return (
-                  <div
-                    key={key}
-                    className={`alc-lib-item${recentKeys.has(key) ? ' is-recent' : ''}${newlyDiscovered.has(key) ? ' is-new-discovery' : ''}`}
-                    data-tier={meta.t}
-                    onPointerDown={(e) => onItemPointerDown(e, key)}
-                    style={{ '--tint': meta.c }}
-                    title={DB.displayName(key)}
-                  >
-                    <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
-                    <div className="alc-lib-name">{DB.displayName(key)}</div>
+                  <div key={key} className="alc-card-wrap" onPointerDown={(e) => onItemPointerDown(e, key)} title={dn}>
+                    <div
+                      className={`alc-lib-item${recentKeys.has(key) ? ' is-recent' : ''}${newlyDiscovered.has(key) ? ' is-new-discovery' : ''}`}
+                      data-tier={meta.t}
+                      style={{ '--tint': meta.c }}
+                    >
+                      <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
+                      {formula && <div className="alc-lib-formula">{formula}</div>}
+                    </div>
+                    <div className="alc-card-name">{shortName}</div>
                   </div>
                 );
               })}
@@ -598,7 +608,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                 <div ref={elemSentinelRef} style={{ height: 1 }} />
               )}
               {items.length === 0 && (
-                <div className="alc-lib-empty">No matches.</div>
+                <div className="alc-lib-empty">Nothing here — try a different search.</div>
               )}
             </>
           )}

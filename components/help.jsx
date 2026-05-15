@@ -28,7 +28,7 @@ function Help({ onClose, totalRecipes }) {
           <div className="alc-help-row">
             <div className="alc-help-num">04</div>
             <div className="alc-help-body">
-              tap × or long-press a tile to remove it from the play area.
+              tap × or long-press a tile to send it back to the void.
             </div>
           </div>
         </div>

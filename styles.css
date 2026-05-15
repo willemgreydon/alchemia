@@ -752,7 +752,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 0;
+    padding: 4px 0 22px;
     border-bottom: 1px dashed rgba(14,14,14,0.1);
   }
   .alc-combo-row .alc-lib-item,
@@ -760,13 +760,13 @@
     flex: 0 0 68px;
     width: 68px;
     height: 68px;
-    min-height: 68px;
+    aspect-ratio: unset;
     padding: 4px;
     justify-content: center;
     cursor: default;
+    overflow: visible;
   }
-  /* remove extra top-margin on icons inside combo cards so they stay centred */
-  .alc-combo-row .alc-pt-icon { margin-top: 0; }
+  .alc-combo-row .alc-pt-icon { margin-bottom: 0; }
   .alc-combo-row .alc-lib-emoji { width: 32px; height: 32px; }
   .alc-combo-op {
     font-family: 'Pixelify Sans', monospace;
@@ -918,9 +918,38 @@
     grid-template-columns: repeat(3, 1fr);
     align-items: start;
     column-gap: 8px;
-    row-gap: 30px;
+    row-gap: 14px;
     scrollbar-width: thin;
     scrollbar-color: var(--ink) transparent;
+  }
+  .alc-card-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: grab;
+    touch-action: none;
+    min-width: 0;
+    width: 100%;
+  }
+  .alc-card-wrap:active { cursor: grabbing; }
+  .alc-card-wrap:hover .alc-lib-item {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .alc-card-name {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    color: var(--ink);
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    pointer-events: none;
+    line-height: 1.2;
+    width: 100%;
   }
   .alc-library-list::-webkit-scrollbar { width: 8px; }
   .alc-library-list::-webkit-scrollbar-thumb { background: var(--ink); }
@@ -929,18 +958,20 @@
     position: relative;
     background: var(--bg);
     border: 2px solid var(--ink);
-    padding: 8px 4px 6px;
+    padding: 6px 4px 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    gap: 3px;
     cursor: grab;
     transition: transform 0.08s, box-shadow 0.08s;
     box-shadow: 2px 2px 0 var(--ink);
     --tint: var(--gold);
-    min-height: 86px;
+    aspect-ratio: 1;
+    width: 100%;
     min-width: 0;
-    overflow: visible;
+    overflow: hidden;
     touch-action: none;
   }
   .alc-lib-item:hover {
@@ -965,12 +996,27 @@
     padding: 1px 3px;
   }
   .alc-lib-emoji {
-    width: 36px; height: 36px;
+    width: 40px; height: 40px;
     line-height: 1;
     pointer-events: none;
     display: block;
+    flex-shrink: 0;
   }
   .alc-lib-emoji svg { display: block; width: 100%; height: 100%; }
+  .alc-lib-formula {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    pointer-events: none;
+    line-height: 1.1;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .alc-lib-name {
     position: absolute;
     top: 100%; left: 50%;
@@ -1004,11 +1050,13 @@
 
   /* ── Periodic-table card variant ── */
   .alc-lib-item--pt {
-    padding: 4px 4px 5px;
-    gap: 1px;
-    min-height: 96px;
+    padding: 4px;
+    gap: 2px;
     border-left: 3px solid var(--tint);
+    justify-content: flex-end;
   }
+  /* suppress the tier dot on PT cards — z and sym already convey identity */
+  .alc-lib-item--pt[data-tier]::after { display: none; }
   .alc-pt-z {
     position: absolute;
     top: 3px; left: 4px;
@@ -1018,9 +1066,19 @@
     line-height: 1;
     pointer-events: none;
   }
+  .alc-pt-sym {
+    position: absolute;
+    top: 2px; right: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    pointer-events: none;
+    letter-spacing: -0.03em;
+  }
   .alc-pt-state {
     position: absolute;
-    top: 3px; right: 4px;
+    bottom: 3px; right: 4px;
     font-size: 7px;
     opacity: 0.45;
     line-height: 1;
@@ -1028,14 +1086,14 @@
     letter-spacing: 0.04em;
     pointer-events: none;
   }
-  /* pixel art icon replaces the big symbol on PT cards */
+  /* pixel art icon */
   .alc-pt-icon {
-    width: 36px;
-    height: 36px;
-    margin-top: 12px;
+    width: 38px;
+    height: 38px;
     display: block;
     pointer-events: none;
     flex-shrink: 0;
+    margin-bottom: 2px;
   }
   /* the PixelIcon div inside the card icon slot */
   .alc-pt-icon .alc-pixel {
@@ -1548,10 +1606,27 @@
     align-items: center;
     gap: 8px;
   }
+  .alc-detail-recipe-ingredient {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
   .alc-detail-recipe-icon {
     width: 32px;
     height: 32px;
     flex-shrink: 0;
+  }
+  .alc-detail-recipe-iname {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    text-align: center;
+    max-width: 52px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0.65;
   }
   .alc-detail-recipe-icon .alc-pixel { width: 32px; height: 32px; }
   .alc-detail-recipe-icon .alc-pixel svg { width: 32px; height: 32px; }
@@ -1619,10 +1694,9 @@
     body.lib-dragging .alc-library { transition: none; }
     /* Hide recent section — saves ~52px so 2 grid rows are visible */
     .alc-recent { display: none; }
-    /* Slightly shorter grid items to fit 2 rows comfortably */
-    .alc-lib-item { min-height: 74px; }
-    .alc-lib-emoji { width: 30px; height: 30px; }
-    .alc-pt-icon { width: 28px; height: 28px; margin-top: 10px; }
+    /* Compact icon sizes for small library height */
+    .alc-lib-emoji { width: 28px; height: 28px; }
+    .alc-pt-icon { width: 26px; height: 26px; }
     /* Show the scroll strip; 5-col grid to share space with it */
     .alc-lib-strip { display: flex; }
     .alc-library-list { grid-template-columns: repeat(5, 1fr); }
