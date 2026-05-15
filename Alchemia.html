@@ -4,38 +4,37 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>ALCHEMIA — combine everything</title>
-<link rel="stylesheet" href="dist/styles.css?v=fad9072">
+<link rel="stylesheet" href="dist/styles.css?v=0964481">
 
-<link rel="preload" as="script" href="dist/recipes.js?v=fad9072">
-<link rel="preload" as="script" href="dist/icons.js?v=fad9072">
+<link rel="preload" as="script" href="dist/recipes.js?v=0964481">
+<link rel="preload" as="script" href="dist/icons.js?v=0964481">
 </head>
 <body>
 <div id="alc-loading" style="position:fixed;inset:0;background:#F2EDE3;display:flex;align-items:center;justify-content:center;z-index:9999;"><span style="font-family:monospace;font-size:13px;letter-spacing:0.16em;color:#0E0E0E;text-transform:uppercase;">Loading&hellip;</span></div>
 <div id="root"></div>
 
-<!-- React -->
-<script defer src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
-<script defer src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
+<!-- React 19.2.0 (self-hosted; React 19 dropped UMD builds) -->
+<script defer src="dist/react.bundle.min.js?v=0964481"></script>
 
 <!-- periodic table element data -->
-<script defer src="dist/periodic-elements.js?v=fad9072"></script>
+<script defer src="dist/periodic-elements.js?v=0964481"></script>
 <!-- recipes (plain JS) -->
-<script defer src="dist/recipes.js?v=fad9072"></script>
+<script defer src="dist/recipes.js?v=0964481"></script>
 <!-- procedural pixel-art icon renderer -->
-<script defer src="dist/icons.js?v=fad9072"></script>
+<script defer src="dist/icons.js?v=0964481"></script>
 <!-- engine (plain JS) -->
-<script defer src="dist/engine.js?v=fad9072"></script>
+<script defer src="dist/engine.js?v=0964481"></script>
 <!-- pre-compiled components -->
-<script defer src="dist/tweaks-panel.js?v=fad9072"></script>
-<script defer src="dist/components/pixel-icons.js?v=fad9072"></script>
-<script defer src="dist/components/top-bar.js?v=fad9072"></script>
-<script defer src="dist/components/play-area.js?v=fad9072"></script>
-<script defer src="dist/components/library.js?v=fad9072"></script>
-<script defer src="dist/components/hint-ticker.js?v=fad9072"></script>
-<script defer src="dist/components/toasts.js?v=fad9072"></script>
-<script defer src="dist/components/help.js?v=fad9072"></script>
+<script defer src="dist/tweaks-panel.js?v=0964481"></script>
+<script defer src="dist/components/pixel-icons.js?v=0964481"></script>
+<script defer src="dist/components/top-bar.js?v=0964481"></script>
+<script defer src="dist/components/play-area.js?v=0964481"></script>
+<script defer src="dist/components/library.js?v=0964481"></script>
+<script defer src="dist/components/hint-ticker.js?v=0964481"></script>
+<script defer src="dist/components/toasts.js?v=0964481"></script>
+<script defer src="dist/components/help.js?v=0964481"></script>
 <!-- main app -->
-<script defer src="dist/app.js?v=fad9072"></script>
+<script defer src="dist/app.js?v=0964481"></script>
 
 <!-- Vercel Analytics + Speed Insights (no-op when running locally) -->
 <script defer src="/_vercel/insights/script.js"></script>
