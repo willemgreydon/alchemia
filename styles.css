@@ -871,15 +871,16 @@
     pointer-events: none;
     z-index: 2;
   }
-  .alc-lib-tier {
+  .alc-lib-item[data-tier]::after {
+    content: attr(data-tier);
     position: absolute;
-    top: 2px; right: 3px;
-    font-size: 8px;
-    letter-spacing: 0.1em;
-    color: var(--tint);
-    font-weight: 700;
+    top: 3px; right: 3px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--tint);
+    opacity: 0.7;
+    font-size: 0;
     pointer-events: none;
-    opacity: 0.85;
   }
 
   /* ── Periodic-table card variant ── */
@@ -1399,6 +1400,10 @@
     .alc-help-body { font-size: 12px; }
     .alc-help-start { padding: 10px 20px; font-size: 16px; }
     .alc-help-footnote { font-size: 10px; }
+
+    /* COMBOS button: collapse to glyph on narrow viewports */
+    .alc-top-combos-btn { font-size: 0; padding: 4px 10px; }
+    .alc-top-combos-btn::before { content: '\229E'; font-size: 14px; }
 
     /* Toasts compact */
     .alc-toasts { top: 60px; left: 8px; }

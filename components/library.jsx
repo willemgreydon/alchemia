@@ -1,4 +1,10 @@
 // ============ library ============
+let _spawnCounter = 0;
+function spiralOffset(n) {
+  const r = 14 * Math.sqrt(n);
+  const theta = n * 2.399963;
+  return { x: r * Math.cos(theta), y: r * Math.sin(theta) };
+}
 
 // deterministic fantasy name from element key — same key always gets same mystery name
 function fantasyName(key) {
@@ -28,7 +34,7 @@ function LibCard({ elKey, unknown, onPointerDown }) {
   if (pt) {
     const stateAbbr = { solid: 's', liquid: 'l', gas: 'g' }[pt.state] || '';
     return (
-      <div className="alc-lib-item alc-lib-item--pt" style={{ '--tint': meta.c }} onPointerDown={onPointerDown}>
+      <div className="alc-lib-item alc-lib-item--pt" data-tier={meta.t} style={{ '--tint': meta.c }} onPointerDown={onPointerDown}>
         <div className="alc-pt-z">{pt.z}</div>
         <div className="alc-pt-state">{stateAbbr}</div>
         <div className="alc-pt-icon"><PixelIcon elKey={elKey} /></div>
@@ -37,7 +43,7 @@ function LibCard({ elKey, unknown, onPointerDown }) {
     );
   }
   return (
-    <div className="alc-lib-item" style={{ '--tint': meta.c }} onPointerDown={onPointerDown}>
+    <div className="alc-lib-item" data-tier={meta.t} style={{ '--tint': meta.c }} onPointerDown={onPointerDown}>
       <div className="alc-lib-emoji"><PixelIcon elKey={elKey} /></div>
       <div className="alc-lib-name">{DB.displayName(elKey)}</div>
     </div>
@@ -247,8 +253,9 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
     const moved = Math.hypot(e.clientX - d.startX, e.clientY - d.startY);
     if (moved < 8 && playRef.current) {
       const rect = playRef.current.getBoundingClientRect();
-      const x = rect.width / 2 - 32 + (Math.random() - 0.5) * 80;
-      const y = rect.height / 2 - 32 + (Math.random() - 0.5) * 80;
+      const off = spiralOffset(++_spawnCounter);
+      const x = rect.width / 2 - 32 + off.x;
+      const y = rect.height / 2 - 32 + off.y;
       window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: d.key, x, y } }));
     }
     dragRef.current = null;
@@ -354,6 +361,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                     <div
                       key={key}
                       className={`alc-lib-item alc-lib-item--pt${recentKeys.has(key) ? ' is-recent' : ''}`}
+                      data-tier={meta.t}
                       onPointerDown={(e) => onItemPointerDown(e, key)}
                       style={{ '--tint': meta.c }}
                       title={`${pt.name} — ${pt.cat}`}
@@ -371,13 +379,13 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                   <div
                     key={key}
                     className={`alc-lib-item${recentKeys.has(key) ? ' is-recent' : ''}`}
+                    data-tier={meta.t}
                     onPointerDown={(e) => onItemPointerDown(e, key)}
                     style={{ '--tint': meta.c }}
                     title={DB.displayName(key)}
                   >
                     <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
                     <div className="alc-lib-name">{DB.displayName(key)}</div>
-                    <div className="alc-lib-tier">T{meta.t}</div>
                   </div>
                 );
               })}

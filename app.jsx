@@ -53,6 +53,57 @@ function discoverySound() {
   chord([523.25, 659.25, 783.99, 1046.50], 0.5);
 }
 
+function useAmbientSound(discoveredSize, soundOn) {
+  const hasInteracted = useRef(false);
+  const nodesRef = useRef(null);
+
+  useEffect(() => {
+    function startAmbient() {
+      if (hasInteracted.current) return;
+      hasInteracted.current = true;
+      document.removeEventListener('pointerdown', startAmbient);
+
+      const ctx = getAudio();
+      const osc = ctx.createOscillator();
+      osc.type = 'sawtooth';
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 200 + discoveredSize * 2;
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(soundOn ? 0.05 : 0, ctx.currentTime);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+
+      nodesRef.current = { filter, gain };
+    }
+    document.addEventListener('pointerdown', startAmbient);
+    return () => document.removeEventListener('pointerdown', startAmbient);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!nodesRef.current) return;
+    const { filter } = nodesRef.current;
+    const ctx = getAudio();
+    filter.frequency.linearRampToValueAtTime(200 + discoveredSize * 2, ctx.currentTime + 2);
+  }, [discoveredSize]);
+
+  useEffect(() => {
+    if (!nodesRef.current) return;
+    const { gain } = nodesRef.current;
+    const ctx = getAudio();
+    if (soundOn) {
+      gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1);
+    } else {
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+    }
+  }, [soundOn]);
+}
+
 // ============ root app ============
 function App() {
   const ambientRef = useRef(null);
@@ -130,6 +181,8 @@ function App() {
     "accentPalette": ["#FF5A1F","#B847C2","#FFC838"]
   }/*EDITMODE-END*/;
   const tweaks = window.useTweaks ? window.useTweaks(tweaksDefaults)[0] : tweaksDefaults;
+
+  useAmbientSound(discovered.size, tweaks.soundOn);
 
   // discover element helper
   const discover = useCallback((key) => {

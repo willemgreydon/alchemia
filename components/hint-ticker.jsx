@@ -34,8 +34,9 @@ function HintTicker({ discovered, recent, total, playRef }) {
             e.preventDefault();
             if (!playRef?.current) return;
             const rect = playRef.current.getBoundingClientRect();
-            const x = rect.width / 2 - 32 + (Math.random() - 0.5) * 80;
-            const y = rect.height / 2 - 32 + (Math.random() - 0.5) * 80;
+            const off = spiralOffset(++_spawnCounter);
+            const x = rect.width / 2 - 32 + off.x;
+            const y = rect.height / 2 - 32 + off.y;
             window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key, x, y } }));
           };
           return (
