@@ -1,0 +1,14 @@
+{
+  "name": "alchemia-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "babel tweaks-panel.jsx app.jsx --out-dir dist --presets @babel/preset-react,@babel/preset-env && babel components --out-dir dist/components --presets @babel/preset-react,@babel/preset-env"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.0",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.24.0"
+  }
+}

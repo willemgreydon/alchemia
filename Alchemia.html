@@ -13,31 +13,29 @@
 <body>
 <div id="root"></div>
 
-<!-- React + Babel -->
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<!-- React -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 
 <!-- periodic table element data -->
 <script src="periodic-elements.js"></script>
-<!-- recipes (plain JS — no babel) -->
+<!-- recipes (plain JS) -->
 <script src="recipes.js"></script>
 <!-- procedural pixel-art icon renderer -->
 <script src="icons.js"></script>
 <!-- engine (plain JS) -->
 <script src="engine.js"></script>
-<!-- tweaks panel (JSX) -->
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<!-- components (JSX) — loaded in dependency order -->
-<script type="text/babel" src="components/pixel-icons.jsx"></script>
-<script type="text/babel" src="components/top-bar.jsx"></script>
-<script type="text/babel" src="components/play-area.jsx"></script>
-<script type="text/babel" src="components/library.jsx"></script>
-<script type="text/babel" src="components/hint-ticker.jsx"></script>
-<script type="text/babel" src="components/toasts.jsx"></script>
-<script type="text/babel" src="components/help.jsx"></script>
-<!-- main app (JSX) -->
-<script type="text/babel" src="app.jsx"></script>
+<!-- pre-compiled components -->
+<script src="dist/tweaks-panel.js"></script>
+<script src="dist/components/pixel-icons.js"></script>
+<script src="dist/components/top-bar.js"></script>
+<script src="dist/components/play-area.js"></script>
+<script src="dist/components/library.js"></script>
+<script src="dist/components/hint-ticker.js"></script>
+<script src="dist/components/toasts.js"></script>
+<script src="dist/components/help.js"></script>
+<!-- main app -->
+<script src="dist/app.js"></script>
 
 </body>
 </html>
