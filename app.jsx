@@ -458,6 +458,7 @@ function App() {
   }, [discovered]);
 
   const milestoneRef = useRef(Math.floor((discovered.size / DB.totalElements) * 4));
+  const allFoundRef = useRef(false);
   const maxTierSeen = useRef((() => {
     let max = 0;
     for (const k of discovered) { const t = DB.META[k]?.t ?? 0; if (t > max) max = t; }
@@ -569,6 +570,16 @@ function App() {
       if (!wasDiscovered) {
         discover(result);
         setToasts(t => [...t, { id: uid(), key: result, time: Date.now() }]);
+        if (discovered.size + 1 === DB.totalElements && !allFoundRef.current) {
+          allFoundRef.current = true;
+          if (sfxOnRef.current) milestoneSound();
+          if (fx.current) {
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            fx.current.particles.burst(cx, cy, '#FFC838', { count: 160, speed: 12 });
+          }
+          setToasts(t => [...t, { id: uid(), key: result, time: Date.now(), allFound: true }]);
+        }
       }
 
       const next = prev.filter(i => i.id !== aId && i.id !== bId);
@@ -587,6 +598,7 @@ function App() {
   useEffect(() => {
     toasts.forEach(toast => {
       if (toastTimersRef.current[toast.id]) return;
+      if (toast.allFound) return;
       const hasFact = DB.META[toast.key]?.fact;
       const delay = hasFact ? 8000 : 4500;
       toastTimersRef.current[toast.id] = setTimeout(() => {

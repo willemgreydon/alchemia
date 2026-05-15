@@ -1225,6 +1225,16 @@
     max-width: 400px;
     align-items: flex-start;
   }
+  .alc-toast--all-found {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    animation: toast-slide 0.4s cubic-bezier(.34,1.6,.4,1);
+    border-color: var(--tint);
+    box-shadow: 5px 5px 0 var(--tint);
+  }
+  .alc-toast--all-found .alc-toast-text { flex: 0 0 auto; text-align: center; }
+  .alc-toast--all-found .alc-toast-name { color: var(--tint); }
   .alc-toast--tier-unlock {
     width: 100%;
     text-align: center;

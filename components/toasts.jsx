@@ -10,6 +10,22 @@ function Toasts({ toasts, onDismiss }) {
           onPointerDown: e => { startX = e.clientX; },
           onPointerUp: e => { if (e.clientX - startX < -40) onDismiss(t.id); },
         };
+        if (t.allFound) {
+          return (
+            <div
+              key={t.id}
+              className="alc-toast alc-toast--all-found"
+              style={{ '--tint': '#FFC838' }}
+              {...handlers}
+            >
+              <div className="alc-toast-text">
+                <div className="alc-toast-label">complete</div>
+                <div className="alc-toast-name">all elements discovered</div>
+                <div className="alc-toast-label" style={{ opacity: 0.4, marginTop: 2 }}>tap to dismiss</div>
+              </div>
+            </div>
+          );
+        }
         if (t.tierUnlock) {
           return (
             <div
