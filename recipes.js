@@ -1871,8 +1871,8 @@
     'roentgenium','copernicium','nihonium','flerovium','moscovium','livermorium','tennessine','oganesson',
   ];
 
-  // base elements always discovered at start — only real periodic table elements
-  const STARTERS = [...PERIODIC_TABLE_KEYS];
+  // base elements always discovered at start — periodic table + primal/common elements
+  const STARTERS = [...PERIODIC_TABLE_KEYS, 'water','fire','earth','air','energy','steam','salt','smoke','ash','lava','stone','sand'];
 
   window.ALCHEMIA_DB = {
     META, RECIPES, LOOKUP, STARTERS, PERIODIC_TABLE_KEYS,

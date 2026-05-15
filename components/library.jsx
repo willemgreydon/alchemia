@@ -33,11 +33,11 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
   const [comboSearch, setComboSearch] = React.useState('');
   const [comboUndiscOnly, setComboUndiscOnly] = React.useState(false);
 
-  // combos: all recipes where both ingredients are discovered, filtered + sorted
+  // combos: all recipes, filtered + sorted (inputs shown as ? if not yet discovered)
   const combos = React.useMemo(() => {
     if (view !== 'combos') return [];
     const q = comboSearch.trim().toLowerCase();
-    let list = DB.RECIPES.filter(({ a, b }) => discovered.has(a) && discovered.has(b));
+    let list = [...DB.RECIPES];
     if (q) {
       list = list.filter(({ a, b, r }) =>
         DB.displayName(a).toLowerCase().includes(q) ||
@@ -290,9 +290,9 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
               <div className="alc-lib-empty">No combinations yet.<br/>Combine elements to unlock recipes.</div>
             ) : combos.map(({ a, b, r }, i) => (
               <div key={i} className="alc-combo-row">
-                <LibCard elKey={a} onPointerDown={(e) => onItemPointerDown(e, a)} />
+                <LibCard elKey={a} unknown={!discovered.has(a)} onPointerDown={discovered.has(a) ? (e) => onItemPointerDown(e, a) : undefined} />
                 <div className="alc-combo-op">+</div>
-                <LibCard elKey={b} onPointerDown={(e) => onItemPointerDown(e, b)} />
+                <LibCard elKey={b} unknown={!discovered.has(b)} onPointerDown={discovered.has(b) ? (e) => onItemPointerDown(e, b) : undefined} />
                 <div className="alc-combo-op">=</div>
                 <LibCard elKey={r} unknown={!discovered.has(r)} onPointerDown={discovered.has(r) ? (e) => onItemPointerDown(e, r) : undefined} />
               </div>
