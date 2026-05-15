@@ -189,7 +189,7 @@
     top: 96px;
     left: 0;
     right: 340px;
-    bottom: 72px;
+    bottom: 96px;
     overflow: hidden;
     z-index: 2;
   }
@@ -1123,7 +1123,7 @@
     position: absolute;
     bottom: 0; left: 0;
     right: 340px;
-    height: 72px;
+    height: 96px;
     border-top: 2px solid var(--ink);
     background: linear-gradient(0deg, rgba(242,237,227,0.96), rgba(242,237,227,0.84));
     display: flex; align-items: center;
@@ -1146,10 +1146,26 @@
     box-shadow: 2px 2px 0 var(--ink);
     font-size: 16px;
   }
+  .alc-ticker-el {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    cursor: pointer;
+  }
+  .alc-ticker-el-name {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    max-width: 52px;
+    text-align: center;
+    line-height: 1.1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   .alc-ticker-icon {
     width: 24px; height: 24px;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
   }
   .alc-ticker-icon svg { display: block; width: 100%; height: 100%; }
   .alc-ticker-plus {
@@ -1540,7 +1556,7 @@
     /* Library — height driven by --lib-h */
     .alc-lib-handle { display: flex; }
     .alc-library {
-      top: auto; right: 0; left: 0; bottom: 60px;
+      top: auto; right: 0; left: 0; bottom: 84px;
       width: 100%; height: var(--lib-h, 220px);
       border-top: 2px solid var(--ink); border-left: none;
       transition: height 220ms ease;
@@ -1562,7 +1578,7 @@
     .alc-combos-list { touch-action: pan-y; overscroll-behavior: contain; }
 
     /* Ticker — full width, horizontally scrollable hints */
-    .alc-ticker { right: 0; height: 60px; padding: 0 14px; gap: 12px; }
+    .alc-ticker { right: 0; height: 84px; padding: 0 14px; gap: 12px; }
     .alc-ticker-row { flex-wrap: nowrap; overflow-x: auto; }
 
     /* Tile × always visible on touch (no hover state on phones) */
@@ -1595,7 +1611,7 @@
     .alc-playarea { top: 50px; }
 
     /* Library tighter — height from --lib-h, no override needed */
-    .alc-library { bottom: 60px; }
+    .alc-library { bottom: 80px; }
     .alc-library-list { grid-template-columns: repeat(4, 1fr); column-gap: 6px; row-gap: 28px; }
     .alc-library-head { padding: 8px 12px 4px; }
     .alc-library-title { font-size: 16px; }
@@ -1604,10 +1620,11 @@
     .alc-recent { padding: 0 12px 6px; }
 
     /* Ticker tighter */
-    .alc-ticker { height: 60px; padding: 0 12px; gap: 8px; }
+    .alc-ticker { height: 80px; padding: 0 12px; gap: 8px; }
     .alc-ticker-label { font-size: 13px; letter-spacing: 0.06em; }
     .alc-ticker-hint { padding: 3px 7px; font-size: 13px; gap: 3px; }
     .alc-ticker-icon { width: 18px; height: 18px; }
+    .alc-ticker-el-name { font-size: 8px; max-width: 44px; }
 
     /* Help modal */
     .alc-help { padding: 20px 16px; }

@@ -1,4 +1,10 @@
 // ============ hint ticker ============
+function keyLabel(key) {
+  const meta = DB.META[key];
+  if (meta?.displayName) return meta.displayName.replace(/\s*\(.*$/, '').trim();
+  return key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 function HintTicker({ discovered, recent, total, playRef }) {
   const [refreshCount, setRefreshCount] = React.useState(0);
   // suggest possible recipes from discovered elements (only ones we haven't done yet)
@@ -13,14 +19,12 @@ function HintTicker({ discovered, recent, total, playRef }) {
         }
       }
     }
-    // sample 3
-    const out = [];
-    for (let k = 0; k < Math.min(3, possible.length); k++) {
-      const idx = Math.floor(Math.random() * possible.length);
-      out.push(possible[idx]);
-      possible.splice(idx, 1);
+    // Fisher-Yates shuffle, take first 3 — avoids duplicates from naive splice-and-random
+    for (let k = possible.length - 1; k > 0; k--) {
+      const j = Math.floor(Math.random() * (k + 1));
+      [possible[k], possible[j]] = [possible[j], possible[k]];
     }
-    return out;
+    return possible.slice(0, 3);
   }, [discovered.size, recent, refreshCount]);
 
   return (
@@ -41,9 +45,15 @@ function HintTicker({ discovered, recent, total, playRef }) {
           };
           return (
             <div key={i} className="alc-ticker-hint">
-              <span className="alc-ticker-icon" onPointerDown={(e) => spawnKey(h.a, e)}><PixelIcon elKey={h.a} /></span>
+              <span className="alc-ticker-el" onPointerDown={(e) => spawnKey(h.a, e)}>
+                <span className="alc-ticker-icon"><PixelIcon elKey={h.a} /></span>
+                <span className="alc-ticker-el-name">{keyLabel(h.a)}</span>
+              </span>
               <span className="alc-ticker-plus">+</span>
-              <span className="alc-ticker-icon" onPointerDown={(e) => spawnKey(h.b, e)}><PixelIcon elKey={h.b} /></span>
+              <span className="alc-ticker-el" onPointerDown={(e) => spawnKey(h.b, e)}>
+                <span className="alc-ticker-icon"><PixelIcon elKey={h.b} /></span>
+                <span className="alc-ticker-el-name">{keyLabel(h.b)}</span>
+              </span>
               <span className="alc-ticker-plus">=</span>
               <span className="alc-ticker-q">?</span>
             </div>
