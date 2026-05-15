@@ -32,6 +32,10 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
 
   const [comboSearch, setComboSearch] = React.useState('');
   const [comboUndiscOnly, setComboUndiscOnly] = React.useState(false);
+  const [comboLimit, setComboLimit] = React.useState(200);
+
+  // reset render limit when search/filter changes
+  React.useEffect(() => { setComboLimit(200); }, [comboSearch, comboUndiscOnly, view]);
 
   // combos: all recipes, filtered + sorted (inputs shown as ? if not yet discovered)
   const combos = React.useMemo(() => {
@@ -284,19 +288,28 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
         </div>
       )}
       <div className="alc-library-scroll-area">
-        <div className="alc-library-list" ref={listRef}>
+        <div className={`alc-library-list${view === 'combos' ? ' alc-combos-list' : ''}`} ref={listRef}>
           {view === 'combos' ? (
             combos.length === 0 ? (
               <div className="alc-lib-empty">No combinations yet.<br/>Combine elements to unlock recipes.</div>
-            ) : combos.map(({ a, b, r }, i) => (
-              <div key={i} className="alc-combo-row">
-                <LibCard elKey={a} unknown={!discovered.has(a)} onPointerDown={discovered.has(a) ? (e) => onItemPointerDown(e, a) : undefined} />
-                <div className="alc-combo-op">+</div>
-                <LibCard elKey={b} unknown={!discovered.has(b)} onPointerDown={discovered.has(b) ? (e) => onItemPointerDown(e, b) : undefined} />
-                <div className="alc-combo-op">=</div>
-                <LibCard elKey={r} unknown={!discovered.has(r)} onPointerDown={discovered.has(r) ? (e) => onItemPointerDown(e, r) : undefined} />
-              </div>
-            ))
+            ) : (
+              <>
+                {combos.slice(0, comboLimit).map(({ a, b, r }, i) => (
+                  <div key={i} className="alc-combo-row">
+                    <LibCard elKey={a} unknown={!discovered.has(a)} onPointerDown={discovered.has(a) ? (e) => onItemPointerDown(e, a) : undefined} />
+                    <div className="alc-combo-op">+</div>
+                    <LibCard elKey={b} unknown={!discovered.has(b)} onPointerDown={discovered.has(b) ? (e) => onItemPointerDown(e, b) : undefined} />
+                    <div className="alc-combo-op">=</div>
+                    <LibCard elKey={r} unknown={!discovered.has(r)} onPointerDown={discovered.has(r) ? (e) => onItemPointerDown(e, r) : undefined} />
+                  </div>
+                ))}
+                {comboLimit < combos.length && (
+                  <button className="alc-combos-more" onClick={() => setComboLimit(n => n + 200)}>
+                    + {combos.length - comboLimit} more
+                  </button>
+                )}
+              </>
+            )
           ) : (
             <>
               {items.map(({ key, meta }) => {

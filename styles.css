@@ -681,6 +681,21 @@
     color: var(--paper);
     opacity: 1;
   }
+  .alc-combos-more {
+    display: block;
+    width: calc(100% - 36px);
+    margin: 8px 18px 16px;
+    padding: 8px;
+    background: transparent;
+    border: 2px solid var(--ink);
+    font-family: var(--font);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+  .alc-combos-more:hover { opacity: 1; }
   .alc-search-wrap { padding: 10px 18px; }
   .alc-search {
     width: 100%;
@@ -1230,6 +1245,8 @@
     /* Hide native scrollbar and block native scroll — strip is the only scroll UI */
     .alc-library-list { scrollbar-width: none; touch-action: none; }
     .alc-library-list::-webkit-scrollbar { display: none; }
+    /* Combos list: restore native touch scroll (rows are tall, custom strip is unusable) */
+    .alc-combos-list { touch-action: pan-y; overscroll-behavior: contain; }
 
     /* Ticker — full width, horizontally scrollable hints */
     .alc-ticker { right: 0; height: 60px; padding: 0 14px; gap: 12px; }
