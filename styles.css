@@ -846,6 +846,28 @@
   }
   .alc-search::placeholder { color: rgba(14,14,14,0.4); }
 
+  .alc-lib-filter-strip {
+    display: flex;
+    gap: 4px;
+    padding: 4px 12px 0;
+    overflow-x: auto;
+  }
+  .alc-lib-filter-btn {
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .alc-lib-filter-btn--active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
   .alc-recent {
     padding: 0 18px 10px;
   }
@@ -910,6 +932,18 @@
   .alc-lib-item.is-recent {
     border-top: 3px solid var(--tint);
     background: color-mix(in srgb, var(--tint) 12%, transparent);
+  }
+  .alc-lib-item.is-new-discovery::after {
+    content: 'NEW';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    font-family: 'Pixelify Sans', monospace;
+    font-size: 7px;
+    letter-spacing: 0.06em;
+    background: var(--tint);
+    color: var(--paper);
+    padding: 1px 3px;
   }
   .alc-lib-emoji {
     width: 36px; height: 36px;

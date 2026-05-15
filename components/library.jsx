@@ -158,11 +158,39 @@ function LibCard({ elKey, unknown, onPointerDown }) {
   );
 }
 
-function Library({ discovered, search, setSearch, filter, setFilter, libView: view, setLibView: setView, recent, recentKeys = new Set(), spawn, playRef, fx }) {
+const METAL_KEYS = new Set([
+  'bronze', 'brass', 'steel', 'stainless-steel', 'cast-iron', 'amalgam', 'nitinol', 'solder',
+  'pyrite', 'galena', 'cinnabar', 'thermite',
+  'iron-oxide', 'copper-oxide', 'aluminum-oxide', 'zinc-oxide', 'titanium-dioxide',
+  'magnesium-oxide', 'calcium-oxide', 'iron-sulfide', 'copper-sulfide', 'zinc-sulfide',
+  'iron-chloride', 'copper-chloride', 'silver-chloride', 'iron-hydroxide',
+]);
+
+const ORGANIC_KEYS = new Set([
+  'methane', 'ethane', 'propane', 'butane', 'ethylene', 'propylene', 'acetylene',
+  'benzene', 'toluene', 'cyclohexane', 'fullerene',
+  'methanol', 'ethanol', 'acetone', 'formaldehyde', 'acetaldehyde',
+  'ethylene_glycol', 'glycerol', 'acetic-acid', 'lactic-acid', 'citric-acid',
+  'salicylic-acid', 'acrylic-acid', 'adipic-acid',
+  'glucose', 'fructose', 'galactose', 'sucrose', 'lactose',
+  'urea', 'caffeine', 'amino-acid', 'glycine', 'penicillin', 'nylon',
+  'polyethylene', 'cellulose', 'starch', 'dna', 'rna',
+  'atp', 'chlorophyll', 'insulin', 'vitamin-c', 'dopamine', 'serotonin', 'melatonin',
+  'aspirin', 'phenol', 'kerosene', 'gasoline', 'natural-gas',
+  'tnt', 'nitroglycerin', 'rdx', 'calcium-carbide', 'calcium-cyanamide',
+]);
+
+const GAS_CONCEPTUAL_KEYS = new Set([
+  'air', 'steam', 'cloud', 'smoke', 'smog',
+  'oxygen', 'nitrogen', 'hydrogen', 'helium', 'neon', 'argon', 'krypton', 'xenon', 'radon',
+]);
+
+function Library({ discovered, search, setSearch, filter, setFilter, libView: view, setLibView: setView, recent, recentKeys = new Set(), newlyDiscovered = new Set(), spawn, playRef, fx }) {
 
   const [detailKey, setDetailKey] = React.useState(null);
   const closeDetail = React.useCallback(() => setDetailKey(null), []);
 
+  const [libFilter, setLibFilter] = React.useState('all');
   const [comboSearch, setComboSearch] = React.useState('');
   const [comboUndiscOnly, setComboUndiscOnly] = React.useState(false);
   const [comboLimit, setComboLimit] = React.useState(200);
@@ -171,7 +199,9 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
 
   // reset render limits when search/filter/view changes
   React.useEffect(() => { setComboLimit(200); }, [comboSearch, comboUndiscOnly, view]);
-  React.useEffect(() => { setElemLimit(30); }, [search, view]);
+  React.useEffect(() => { setElemLimit(30); }, [search, view, libFilter]);
+  // reset category filter when switching to combos
+  React.useEffect(() => { if (view === 'combos') setLibFilter('all'); }, [view]);
 
   // auto-load more elements as user scrolls
   React.useEffect(() => {
@@ -228,10 +258,21 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
       if ((a.meta.t || 0) !== (b.meta.t || 0)) return (a.meta.t || 0) - (b.meta.t || 0);
       return a.key.localeCompare(b.key);
     });
+    let result = arr;
     const q = search.trim().toLowerCase();
-    if (!q) return arr;
-    return arr.filter(i => i.key.includes(q) || DB.displayName(i.key).toLowerCase().includes(q));
-  }, [discovered, search]);
+    if (q) result = result.filter(i => i.key.includes(q) || DB.displayName(i.key).toLowerCase().includes(q));
+    if (libFilter !== 'all') {
+      result = result.filter(({ key, meta }) => {
+        if (libFilter === 'recent') return recent.includes(key);
+        const pt = window.PeriodicTable?.BY_NAME[key.toLowerCase()];
+        if (libFilter === 'metals') return pt?.cat?.includes('metal') || METAL_KEYS.has(key);
+        if (libFilter === 'gases') return pt?.state === 'gas' || GAS_CONCEPTUAL_KEYS.has(key);
+        if (libFilter === 'organics') return ORGANIC_KEYS.has(key) || /C\d/.test(meta?.displayName || '');
+        return true;
+      });
+    }
+    return result;
+  }, [discovered, search, libFilter, recent]);
 
   // drag from library
   const dragRef = React.useRef(null);
@@ -389,7 +430,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
       }
     }
     window.dispatchEvent(new CustomEvent('alchemia:librarydrop', {
-      detail: { key: d.key, clientX: e.clientX, clientY: e.clientY }
+      detail: { key: d.key, clientX: e.clientX, clientY: e.clientY, moved }
     }));
     if (moved < 8) {
       if (view === 'elements') {
@@ -429,6 +470,17 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+        </div>
+      )}
+      {view === 'elements' && (
+        <div className="alc-lib-filter-strip">
+          {['all', 'metals', 'gases', 'organics', 'recent'].map(f => (
+            <button
+              key={f}
+              className={`alc-lib-filter-btn${libFilter === f ? ' alc-lib-filter-btn--active' : ''}`}
+              onClick={() => setLibFilter(f)}
+            >{f.toUpperCase()}</button>
+          ))}
         </div>
       )}
       {view === 'combos' && (
@@ -513,7 +565,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                   return (
                     <div
                       key={key}
-                      className={`alc-lib-item alc-lib-item--pt${recentKeys.has(key) ? ' is-recent' : ''}`}
+                      className={`alc-lib-item alc-lib-item--pt${recentKeys.has(key) ? ' is-recent' : ''}${newlyDiscovered.has(key) ? ' is-new-discovery' : ''}`}
                       data-tier={meta.t}
                       onPointerDown={(e) => onItemPointerDown(e, key)}
                       style={{ '--tint': meta.c }}
@@ -531,7 +583,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                 return (
                   <div
                     key={key}
-                    className={`alc-lib-item${recentKeys.has(key) ? ' is-recent' : ''}`}
+                    className={`alc-lib-item${recentKeys.has(key) ? ' is-recent' : ''}${newlyDiscovered.has(key) ? ' is-new-discovery' : ''}`}
                     data-tier={meta.t}
                     onPointerDown={(e) => onItemPointerDown(e, key)}
                     style={{ '--tint': meta.c }}

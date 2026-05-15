@@ -84,15 +84,13 @@ const PlayArea = React.forwardRef(function PlayArea(props, ref) {
   React.useEffect(() => {
     const onDrop = (e) => {
       const data = e.detail;
-      if (!data) return;
+      if (!data || data.moved < 8) return;
       const rect = areaRef.current.getBoundingClientRect();
       // only accept if drop is inside play area
       if (data.clientX < rect.left || data.clientX > rect.right ||
           data.clientY < rect.top || data.clientY > rect.bottom) return;
-      const x = data.clientX - rect.left - 32;
-      const y = data.clientY - rect.top - 32;
-      props.instances; // noop
-      // spawn
+      const x = Math.max(0, Math.min(rect.width - 64, data.clientX - rect.left - 32));
+      const y = Math.max(0, Math.min(rect.height - 64, data.clientY - rect.top - 32));
       window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: data.key, x, y } }));
     };
     window.addEventListener('alchemia:librarydrop', onDrop);

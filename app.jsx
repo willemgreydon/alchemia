@@ -514,6 +514,9 @@ function App() {
     return () => clearTimeout(t);
   }, [instances]);
 
+  // newly discovered — shows "NEW" badge in library for 60 s
+  const [newlyDiscovered, setNewlyDiscovered] = useState(new Set());
+
   // toasts
   const [toasts, setToasts] = useState([]);
   const toastTimersRef = useRef({});
@@ -604,6 +607,8 @@ function App() {
 
       if (!wasDiscovered) {
         discover(result);
+        setNewlyDiscovered(prev => { const n = new Set(prev); n.add(result); return n; });
+        setTimeout(() => setNewlyDiscovered(prev => { const n = new Set(prev); n.delete(result); return n; }), 60_000);
         setToasts(t => [...t, { id: uid(), key: result, time: Date.now() }]);
         if (discovered.size + 1 === DB.totalElements && !allFoundRef.current) {
           allFoundRef.current = true;
@@ -729,6 +734,7 @@ function App() {
         setLibView={setLibView}
         recent={recent}
         recentKeys={recentKeys}
+        newlyDiscovered={newlyDiscovered}
         spawn={spawn}
         playRef={playRef}
         fx={fx}
