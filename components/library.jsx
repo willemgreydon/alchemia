@@ -19,6 +19,9 @@ function formulaComplexity(key) {
   if (!match) return (meta.t || 0) * 100000 + 50000; // conceptual elements grouped by tier
 
   const formula = match[1];
+  // if the formula contains 2+ consecutive lowercase letters it's descriptive text, not a chemical formula
+  // e.g. "Hg-metal alloy", "Mg-porphyrin", "zero resistance" → fall back to tier score
+  if (/[a-z]{2}/.test(formula)) return (meta.t || 0) * 100000 + 50000;
   const SUB = '₀₁₂₃₄₅₆₇₈₉';
   let ascii = '';
   for (const ch of formula) {
@@ -39,6 +42,8 @@ function formulaComplexity(key) {
     weightedZ += z * count;
   }
 
+  // no element symbols parsed → descriptive text, not a formula (e.g. "zero resistance")
+  if (elementTypes === 0) return (meta.t || 0) * 100000 + 50000;
   return elementTypes * 10000 + weightedZ;
 }
 
