@@ -166,9 +166,23 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
   const [comboSearch, setComboSearch] = React.useState('');
   const [comboUndiscOnly, setComboUndiscOnly] = React.useState(false);
   const [comboLimit, setComboLimit] = React.useState(200);
+  const [elemLimit, setElemLimit] = React.useState(30);
+  const elemSentinelRef = React.useRef(null);
 
-  // reset render limit when search/filter changes
+  // reset render limits when search/filter/view changes
   React.useEffect(() => { setComboLimit(200); }, [comboSearch, comboUndiscOnly, view]);
+  React.useEffect(() => { setElemLimit(30); }, [search, view]);
+
+  // auto-load more elements as user scrolls
+  React.useEffect(() => {
+    const sentinel = elemSentinelRef.current;
+    if (!sentinel) return;
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) setElemLimit(n => n + 30);
+    }, { threshold: 0 });
+    obs.observe(sentinel);
+    return () => obs.disconnect();
+  }, [elemSentinelRef.current, search, view]);
 
   // combos: all recipes, filtered + sorted (inputs shown as ? if not yet discovered)
   const combos = React.useMemo(() => {
@@ -492,7 +506,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
             )
           ) : (
             <>
-              {items.map(({ key, meta }) => {
+              {items.slice(0, elemLimit).map(({ key, meta }) => {
                 const pt = window.PeriodicTable?.BY_NAME[key.toLowerCase()];
                 if (pt) {
                   const stateAbbr = { solid: 's', liquid: 'l', gas: 'g' }[pt.state] || '';
@@ -528,6 +542,9 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                   </div>
                 );
               })}
+              {elemLimit < items.length && (
+                <div ref={elemSentinelRef} style={{ height: 1 }} />
+              )}
               {items.length === 0 && (
                 <div className="alc-lib-empty">No matches.</div>
               )}
