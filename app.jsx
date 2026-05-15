@@ -11,10 +11,18 @@ function uid() { return Math.random().toString(36).slice(2, 9); }
 function useAmbient(canvasRef, particleRef) {
   const fxRef = useRef(null);
   useEffect(() => {
-    if (!canvasRef.current || !particleRef.current) return;
-    const ambient = FX.initAmbient(canvasRef.current);
-    const particles = FX.initParticles(particleRef.current);
-    fxRef.current = { ambient, particles };
+    function init() {
+      if (!canvasRef.current || !particleRef.current) return;
+      const ambient = FX.initAmbient(canvasRef.current);
+      const particles = FX.initParticles(particleRef.current);
+      fxRef.current = { ambient, particles };
+    }
+    if (typeof requestIdleCallback !== 'undefined') {
+      const id = requestIdleCallback(init, { timeout: 2000 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = setTimeout(init, 200);
+    return () => clearTimeout(id);
   }, []);
   return fxRef;
 }
