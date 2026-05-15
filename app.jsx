@@ -480,6 +480,7 @@ function App() {
   const [instances, setInstances] = useState([]);
   // toasts
   const [toasts, setToasts] = useState([]);
+  const toastTimersRef = useRef({});
   // ui
   const [search, setSearch] = useState('');
   const [helpOpen, setHelpOpen] = useState(() => {
@@ -581,14 +582,25 @@ function App() {
     setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
 
-  // dismiss toasts — longer delay when a science fact is present
+  // dismiss toasts — each toast gets its own independent timer so rapid
+  // combines don't restart the clock for already-queued toasts
   useEffect(() => {
-    if (!toasts.length) return;
-    const first = toasts[0];
-    const hasFact = DB.META[first.key] && DB.META[first.key].fact;
-    const delay = hasFact ? 8000 : 4500;
-    const t = setTimeout(() => setToasts(prev => prev.slice(1)), delay);
-    return () => clearTimeout(t);
+    toasts.forEach(toast => {
+      if (toastTimersRef.current[toast.id]) return;
+      const hasFact = DB.META[toast.key]?.fact;
+      const delay = hasFact ? 8000 : 4500;
+      toastTimersRef.current[toast.id] = setTimeout(() => {
+        setToasts(prev => prev.filter(t => t.id !== toast.id));
+        delete toastTimersRef.current[toast.id];
+      }, delay);
+    });
+    // clear timers for toasts that were manually dismissed
+    Object.keys(toastTimersRef.current).forEach(id => {
+      if (!toasts.find(t => t.id === id)) {
+        clearTimeout(toastTimersRef.current[id]);
+        delete toastTimersRef.current[id];
+      }
+    });
   }, [toasts]);
 
   // dismiss help permanently
