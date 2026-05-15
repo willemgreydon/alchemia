@@ -451,7 +451,11 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
         <div className={`alc-library-list${view === 'combos' ? ' alc-combos-list' : ''}`} ref={listRef}>
           {view === 'combos' ? (
             combos.length === 0 ? (
-              <div className="alc-lib-empty">No combinations yet.<br/>Combine elements to unlock recipes.</div>
+              <div className="alc-lib-empty">
+                {comboUndiscOnly && DB.RECIPES.length > 0
+                  ? "You've found every combination."
+                  : <>No combinations yet.<br/>Combine elements to unlock recipes.</>}
+              </div>
             ) : (
               <>
                 {combos.slice(0, comboLimit).map(({ a, b, r }, i) => (
