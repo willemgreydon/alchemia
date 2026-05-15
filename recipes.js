@@ -109,6 +109,81 @@
     unicorn:  { e: '🦄', c: '#F9B8E4', t: 4 },
     kraken:   { e: '🐙', c: '#1F4A6E', t: 4 },
 
+    // Tier 5 — homodiatomic molecules
+    dihydrogen:         { e: '💨', c: '#55EFC4', t: 5, displayName: 'Dihydrogen (H₂)' },
+    dioxygen:           { e: '🫧', c: '#55EFC4', t: 5, displayName: 'Dioxygen (O₂)' },
+    dinitrogen:         { e: '🌬️', c: '#55EFC4', t: 5, displayName: 'Dinitrogen (N₂)' },
+    difluorine:         { e: '🟡', c: '#FDCB6E', t: 5, displayName: 'Difluorine (F₂)' },
+    dichlorine:         { e: '🟩', c: '#FDCB6E', t: 5, displayName: 'Dichlorine (Cl₂)' },
+    dibromine:          { e: '🟤', c: '#FDCB6E', t: 5, displayName: 'Dibromine (Br₂)' },
+    diiodine:           { e: '🟣', c: '#FDCB6E', t: 5, displayName: 'Diiodine (I₂)' },
+    disulfur:           { e: '🟨', c: '#FDD835', t: 5, displayName: 'Disulfur (S₂)' },
+
+    // Tier 5–6 — key inorganic compounds
+    // Binary hydrides & acids
+    ammonia:            { e: '🫧', c: '#A8D8E8', t: 5, displayName: 'Ammonia (NH₃)' },
+    'hydrogen-sulfide': { e: '💨', c: '#FDCB6E', t: 5, displayName: 'Hydrogen Sulfide (H₂S)' },
+    'hydrogen-chloride':{ e: '💨', c: '#FDCB6E', t: 5, displayName: 'Hydrogen Chloride (HCl)' },
+    'hydrogen-fluoride':{ e: '💨', c: '#FDCB6E', t: 5, displayName: 'Hydrogen Fluoride (HF)' },
+    'hydrogen-iodide':  { e: '💨', c: '#FDCB6E', t: 5, displayName: 'Hydrogen Iodide (HI)' },
+    // Carbon oxides
+    'carbon-monoxide':  { e: '💨', c: '#4A4A4A', t: 5, displayName: 'Carbon Monoxide (CO)' },
+    'carbon-dioxide':   { e: '💨', c: '#A8C8DB', t: 5, displayName: 'Carbon Dioxide (CO₂)' },
+    // Sulfur oxides
+    'sulfur-dioxide':   { e: '💨', c: '#FDCB6E', t: 5, displayName: 'Sulfur Dioxide (SO₂)' },
+    'sulfur-trioxide':  { e: '💨', c: '#FDD835', t: 5, displayName: 'Sulfur Trioxide (SO₃)' },
+    // Nitrogen oxides
+    'nitrogen-monoxide':{ e: '💨', c: '#DDE6EE', t: 5, displayName: 'Nitric Oxide (NO)' },
+    'nitrogen-dioxide': { e: '🟫', c: '#E17055', t: 5, displayName: 'Nitrogen Dioxide (NO₂)' },
+    // Ozone
+    ozone:              { e: '🫧', c: '#55EFC4', t: 5, displayName: 'Ozone (O₃)' },
+    // Acids (from oxides + water)
+    'sulfuric-acid':    { e: '🧪', c: '#FDCB6E', t: 6, displayName: 'Sulfuric Acid (H₂SO₄)' },
+    'nitric-acid':      { e: '🧪', c: '#E17055', t: 6, displayName: 'Nitric Acid (HNO₃)' },
+    'carbonic-acid':    { e: '🧪', c: '#A8C8DB', t: 6, displayName: 'Carbonic Acid (H₂CO₃)' },
+    'hydrochloric-acid':{ e: '🧪', c: '#FDCB6E', t: 6, displayName: 'Hydrochloric Acid (HCl aq)' },
+    'hydrofluoric-acid':{ e: '🧪', c: '#FDCB6E', t: 6, displayName: 'Hydrofluoric Acid (HF aq)' },
+    'phosphoric-acid':  { e: '🧪', c: '#55EFC4', t: 6, displayName: 'Phosphoric Acid (H₃PO₄)' },
+    // Hydroxides
+    'sodium-hydroxide': { e: '🧪', c: '#FF6B6B', t: 6, displayName: 'Sodium Hydroxide (NaOH)' },
+    'calcium-hydroxide':{ e: '🧪', c: '#FF9F43', t: 6, displayName: 'Calcium Hydroxide (Ca(OH)₂)' },
+    'potassium-hydroxide':{ e: '🧪', c: '#FF6B6B', t: 6, displayName: 'Potassium Hydroxide (KOH)' },
+    'iron-hydroxide':   { e: '🟫', c: '#8B4A1F', t: 6, displayName: 'Iron Hydroxide (Fe(OH)₃)' },
+    // Metal oxides
+    'magnesium-oxide':  { e: '⚪', c: '#FF9F43', t: 5, displayName: 'Magnesium Oxide (MgO)' },
+    'calcium-oxide':    { e: '⚪', c: '#FF9F43', t: 5, displayName: 'Calcium Oxide (CaO / quicklime)' },
+    'iron-oxide':       { e: '🟤', c: '#8B4A1F', t: 5, displayName: 'Iron Oxide (Fe₂O₃)' },
+    'copper-oxide':     { e: '🟤', c: '#B97A4A', t: 5, displayName: 'Copper Oxide (CuO)' },
+    'aluminum-oxide':   { e: '⚪', c: '#74B9FF', t: 5, displayName: 'Aluminum Oxide (Al₂O₃)' },
+    'silicon-dioxide':  { e: '💎', c: '#A29BFE', t: 5, displayName: 'Silicon Dioxide (SiO₂)' },
+    'zinc-oxide':       { e: '⚪', c: '#9098A4', t: 5, displayName: 'Zinc Oxide (ZnO)' },
+    'titanium-dioxide': { e: '⚪', c: '#9098A4', t: 5, displayName: 'Titanium Dioxide (TiO₂)' },
+    // Metal halides
+    'sodium-chloride':  { e: '🧂', c: '#EFEEE8', t: 5, displayName: 'Sodium Chloride (NaCl)' },
+    'potassium-chloride':{ e: '🧂', c: '#EFEEE8', t: 5, displayName: 'Potassium Chloride (KCl)' },
+    'calcium-chloride': { e: '🧂', c: '#FF9F43', t: 5, displayName: 'Calcium Chloride (CaCl₂)' },
+    'iron-chloride':    { e: '🧂', c: '#8B4A1F', t: 5, displayName: 'Iron(III) Chloride (FeCl₃)' },
+    'copper-chloride':  { e: '🧂', c: '#B97A4A', t: 5, displayName: 'Copper Chloride (CuCl₂)' },
+    'silver-chloride':  { e: '⬜', c: '#C8CCD2', t: 5, displayName: 'Silver Chloride (AgCl)' },
+    // Metal sulfides
+    'iron-sulfide':     { e: '🟤', c: '#8B4A1F', t: 5, displayName: 'Iron Sulfide (FeS)' },
+    'copper-sulfide':   { e: '🟤', c: '#B97A4A', t: 5, displayName: 'Copper Sulfide (CuS)' },
+    'zinc-sulfide':     { e: '✨', c: '#9098A4', t: 5, displayName: 'Zinc Sulfide (ZnS)' },
+    // Metal nitrides
+    'lithium-nitride':  { e: '🔴', c: '#FF6B6B', t: 5, displayName: 'Lithium Nitride (Li₃N)' },
+    'calcium-nitride':  { e: '⚪', c: '#FF9F43', t: 5, displayName: 'Calcium Nitride (Ca₃N₂)' },
+    // Metal carbonates
+    'calcium-carbonate':{ e: '🪨', c: '#FF9F43', t: 6, displayName: 'Calcium Carbonate (CaCO₃)' },
+    'sodium-carbonate': { e: '🧂', c: '#FF6B6B', t: 6, displayName: 'Sodium Carbonate (Na₂CO₃)' },
+    // Organic
+    methane:            { e: '💨', c: '#55EFC4', t: 6, displayName: 'Methane (CH₄)' },
+    ethylene:           { e: '💨', c: '#55EFC4', t: 6, displayName: 'Ethylene (C₂H₄)' },
+    acetylene:          { e: '💨', c: '#55EFC4', t: 6, displayName: 'Acetylene (C₂H₂)' },
+    ethanol:            { e: '🍶', c: '#DDE6EE', t: 7, displayName: 'Ethanol (C₂H₅OH)' },
+    'acetic-acid':      { e: '🧪', c: '#DDE6EE', t: 7, displayName: 'Acetic Acid (CH₃COOH)' },
+    glucose:            { e: '🍬', c: '#FFC838', t: 7, displayName: 'Glucose (C₆H₁₂O₆)' },
+    urea:               { e: '🧪', c: '#DDE6EE', t: 7, displayName: 'Urea (CO(NH₂)₂)' },
+
     // Tier 5 — civilization / abstract
     human:    { e: '🧍', c: '#D8A878', t: 5 },
     farmer:   { e: '🧑‍🌾', c: '#A88B5F', t: 5 },
@@ -306,19 +381,132 @@
   // ---------- Curated recipes ----------
   // [a, b, result] — order-agnostic; lookup normalizes.
   const HAND = [
+    // ── NEW: Homodiatomic molecules ───────────────────────────────────────
+    ['hydrogen','hydrogen','dihydrogen'],    // H + H → H₂
+    ['oxygen','oxygen','dioxygen'],          // O + O → O₂
+    ['nitrogen','nitrogen','dinitrogen'],    // N + N → N₂
+    ['fluorine','fluorine','difluorine'],    // F + F → F₂
+    ['chlorine','chlorine','dichlorine'],    // Cl + Cl → Cl₂
+    ['bromine','bromine','dibromine'],       // Br + Br → Br₂
+    ['iodine','iodine','diiodine'],          // I + I → I₂
+    ['sulfur','sulfur','disulfur'],          // S + S → S₂
+
+    // ── NEW: Hydroxides (metal + water — must come before sodium+water=energy) ──
+    ['sodium','water','sodium-hydroxide'],       // Na + H₂O → NaOH
+    ['calcium','water','calcium-hydroxide'],     // Ca + H₂O → Ca(OH)₂
+    ['potassium','water','potassium-hydroxide'], // K + H₂O → KOH
+
+    // ── NEW: Metal halides (sodium+chlorine must come before existing sodium+chlorine=salt) ──
+    ['sodium','chlorine','sodium-chloride'],     // Na + Cl → NaCl
+    ['potassium','chlorine','potassium-chloride'], // K + Cl → KCl
+    ['calcium','dichlorine','calcium-chloride'], // Ca + Cl₂ → CaCl₂
+    ['calcium','chlorine','calcium-chloride'],   // Ca + Cl → CaCl₂
+    ['iron','dichlorine','iron-chloride'],        // Fe + Cl₂ → FeCl₃
+    ['iron','chlorine','iron-chloride'],          // Fe + Cl → FeCl₃
+    ['copper','chlorine','copper-chloride'],      // Cu + Cl → CuCl₂
+    ['silver','chlorine','silver-chloride'],      // Ag + Cl → AgCl
+
+    // ── NEW: Nitrogen oxides (nitrogen+oxygen before existing nitrogen+oxygen=air) ──
+    ['nitrogen','oxygen','nitrogen-monoxide'],    // N + O → NO
+
+    // ── NEW: Compound chains ──────────────────────────────────────────────
+    // Water routes
+    ['dihydrogen','oxygen','water'],             // H₂ + O → H₂O
+    ['dihydrogen','dioxygen','water'],           // H₂ + O₂ → H₂O
+
+    // Ammonia (Haber process)
+    ['dihydrogen','nitrogen','ammonia'],         // H₂ + N → NH₃
+    ['dihydrogen','dinitrogen','ammonia'],       // H₂ + N₂ → NH₃
+    ['hydrogen','nitrogen','ammonia'],           // H + N → NH₃
+
+    // Hydrogen acids
+    ['dihydrogen','disulfur','hydrogen-sulfide'],      // H₂ + S₂ → H₂S
+    ['dihydrogen','sulfur','hydrogen-sulfide'],        // H₂ + S → H₂S
+    ['dihydrogen','dichlorine','hydrogen-chloride'],   // H₂ + Cl₂ → 2HCl
+    ['dihydrogen','chlorine','hydrogen-chloride'],     // H₂ + Cl → HCl
+    ['dihydrogen','difluorine','hydrogen-fluoride'],   // H₂ + F₂ → 2HF
+    ['dihydrogen','fluorine','hydrogen-fluoride'],     // H₂ + F → HF
+    ['dihydrogen','iodine','hydrogen-iodide'],         // H₂ + I → HI
+    ['dihydrogen','diiodine','hydrogen-iodide'],       // H₂ + I₂ → 2HI
+    ['hydrogen','chlorine','hydrogen-chloride'],       // H + Cl → HCl
+    ['hydrogen','fluorine','hydrogen-fluoride'],       // H + F → HF
+    ['hydrogen','iodine','hydrogen-iodide'],           // H + I → HI
+    ['hydrogen','sulfur','hydrogen-sulfide'],          // H + S → H₂S
+
+    // Carbon compounds
+    ['carbon','oxygen','carbon-monoxide'],             // C + O → CO
+    ['carbon','dioxygen','carbon-dioxide'],            // C + O₂ → CO₂
+    ['carbon-monoxide','oxygen','carbon-dioxide'],     // CO + O → CO₂
+    ['carbon','dihydrogen','methane'],                 // C + H₂ → CH₄
+    ['carbon','hydrogen','methane'],                   // C + H → CH₄
+    ['methane','oxygen','carbon-dioxide'],             // CH₄ + O₂ → CO₂ (combustion, simplified)
+
+    // Sulfur oxides
+    ['sulfur','oxygen','sulfur-dioxide'],              // S + O → SO₂
+    ['sulfur','dioxygen','sulfur-dioxide'],            // S + O₂ → SO₂
+    ['sulfur-dioxide','oxygen','sulfur-trioxide'],     // SO₂ + O → SO₃
+
+    // More nitrogen oxides
+    ['nitrogen-monoxide','oxygen','nitrogen-dioxide'], // NO + O → NO₂
+
+    // Ozone
+    ['dioxygen','oxygen','ozone'],                     // O₂ + O → O₃
+
+    // Acids from oxide + water
+    ['sulfur-trioxide','water','sulfuric-acid'],       // SO₃ + H₂O → H₂SO₄
+    ['nitrogen-dioxide','water','nitric-acid'],        // NO₂ + H₂O → HNO₃
+    ['carbon-dioxide','water','carbonic-acid'],        // CO₂ + H₂O → H₂CO₃
+    ['hydrogen-chloride','water','hydrochloric-acid'], // HCl + H₂O → HCl(aq)
+    ['hydrogen-fluoride','water','hydrofluoric-acid'], // HF + H₂O → HF(aq)
+    ['phosphorus','water','phosphoric-acid'],          // P + H₂O (simplified)
+    ['phosphorus','dioxygen','phosphoric-acid'],       // P + O₂ → phosphoric acid (simplified)
+
+    // Metal oxides
+    ['magnesium','oxygen','magnesium-oxide'],          // Mg + O → MgO
+    ['magnesium','dioxygen','magnesium-oxide'],        // Mg + O₂ → MgO
+    ['calcium','oxygen','calcium-oxide'],              // Ca + O → CaO
+    ['iron','oxygen','iron-oxide'],                    // Fe + O → Fe₂O₃
+    ['copper','oxygen','copper-oxide'],                // Cu + O → CuO
+    ['aluminum','oxygen','aluminum-oxide'],            // Al + O → Al₂O₃
+    ['silicon','dioxygen','silicon-dioxide'],          // Si + O₂ → SiO₂
+    ['silicon','oxygen','silicon-dioxide'],            // Si + O → SiO₂
+    ['zinc','oxygen','zinc-oxide'],                    // Zn + O → ZnO
+    ['titanium','dioxygen','titanium-dioxide'],        // Ti + O₂ → TiO₂
+    ['titanium','oxygen','titanium-dioxide'],          // Ti + O → TiO₂
+
+    // Metal sulfides
+    ['iron','sulfur','iron-sulfide'],                  // Fe + S → FeS
+    ['copper','sulfur','copper-sulfide'],              // Cu + S → CuS
+    ['zinc','sulfur','zinc-sulfide'],                  // Zn + S → ZnS
+
+    // Metal nitrides
+    ['lithium','nitrogen','lithium-nitride'],          // Li + N → Li₃N
+    ['calcium','nitrogen','calcium-nitride'],          // Ca + N → Ca₃N₂
+
+    // Metal carbonates (metal oxide + CO₂)
+    ['calcium-oxide','carbon-dioxide','calcium-carbonate'],   // CaO + CO₂ → CaCO₃
+    ['sodium-hydroxide','carbon-dioxide','sodium-carbonate'], // 2NaOH + CO₂ → Na₂CO₃
+
+    // Organic chains
+    ['ethylene','water','ethanol'],                    // C₂H₄ + H₂O → C₂H₅OH
+    ['methane','dioxygen','ethylene'],                 // simplified: 2CH₄ → C₂H₄
+    ['carbon','dihydrogen','acetylene'],               // 2C + H₂ → C₂H₂
+    ['ammonia','carbon-dioxide','urea'],               // CO₂ + 2NH₃ → urea
+    ['carbon','water','glucose'],                      // simplified: C + H₂O → glucose (photosynthesis-ish)
+    ['carbon-dioxide','water','glucose'],              // CO₂ + H₂O → glucose (photosynthesis)
+
     // ── Pure chemistry: periodic-table elements → primal elements ─────────
-    ['hydrogen','oxygen','water'],       // 2H₂ + O₂ → 2H₂O
-    ['nitrogen','oxygen','air'],         // ~78% N₂ + 21% O₂ = atmosphere
-    ['silicon','oxygen','earth'],        // SiO₂ silica = earth's crust
-    ['magnesium','oxygen','fire'],       // Mg burns brilliantly in O₂
+    ['hydrogen','oxygen','water'],       // 2H₂ + O₂ → 2H₂O (kept; hydrogen+oxygen pair not yet seen)
+    ['nitrogen','oxygen','air'],         // ~78% N₂ + 21% O₂ = atmosphere (blocked by nitrogen+oxygen=NO above)
+    ['silicon','oxygen','earth'],        // SiO₂ silica = earth's crust (blocked by silicon+oxygen=silicon-dioxide above)
+    ['magnesium','oxygen','fire'],       // Mg burns brilliantly in O₂ (blocked by magnesium+oxygen=magnesium-oxide above)
     ['phosphorus','oxygen','fire'],      // white phosphorus autoignites in air
-    ['sodium','chlorine','salt'],        // NaCl table salt
-    ['iron','oxygen','rust'],            // Fe₂O₃ iron oxide
-    ['carbon','oxygen','smoke'],         // incomplete combustion → soot
+    ['sodium','chlorine','salt'],        // blocked by sodium+chlorine=sodium-chloride above
+    ['iron','oxygen','rust'],            // blocked by iron+oxygen=iron-oxide above
+    ['carbon','oxygen','smoke'],         // blocked by carbon+oxygen=carbon-monoxide above
     ['calcium','silicon','stone'],       // calcium silicate = natural stone
-    ['hydrogen','hydrogen','energy'],    // H₂ fusion (simplified)
-    ['sodium','water','energy'],         // Na + H₂O → explosive reaction
-    ['potassium','water','energy'],      // K + H₂O → even more reactive
+    ['sodium','water','energy'],         // blocked by sodium+water=sodium-hydroxide above
+    ['potassium','water','energy'],      // blocked by potassium+water=potassium-hydroxide above
     ['carbon','carbon','coal'],          // graphite / carbon deposit
     ['sulfur','hydrogen','lava'],        // volcanic H₂S → sulfurous heat
     ['calcium','oxygen','sand'],         // CaO lime → calcium compound
