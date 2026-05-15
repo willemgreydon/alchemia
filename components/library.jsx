@@ -30,11 +30,32 @@ function LibCard({ elKey, unknown, onPointerDown }) {
 
 function Library({ discovered, search, setSearch, filter, setFilter, libView: view, setLibView: setView, recent, spawn, playRef, fx }) {
 
-  // combos: all recipes where both ingredients are discovered
+  const [comboSearch, setComboSearch] = React.useState('');
+  const [comboUndiscOnly, setComboUndiscOnly] = React.useState(false);
+
+  // combos: all recipes where both ingredients are discovered, filtered + sorted
   const combos = React.useMemo(() => {
     if (view !== 'combos') return [];
-    return DB.RECIPES.filter(({ a, b }) => discovered.has(a) && discovered.has(b));
-  }, [view, discovered]);
+    const q = comboSearch.trim().toLowerCase();
+    let list = DB.RECIPES.filter(({ a, b }) => discovered.has(a) && discovered.has(b));
+    if (q) {
+      list = list.filter(({ a, b, r }) =>
+        DB.displayName(a).toLowerCase().includes(q) ||
+        DB.displayName(b).toLowerCase().includes(q) ||
+        DB.displayName(r).toLowerCase().includes(q) ||
+        a.includes(q) || b.includes(q) || r.includes(q)
+      );
+    }
+    if (comboUndiscOnly) list = list.filter(({ r }) => !discovered.has(r));
+    // undiscovered results first, then alphabetical by result
+    list.sort((x, y) => {
+      const xDisc = discovered.has(x.r) ? 1 : 0;
+      const yDisc = discovered.has(y.r) ? 1 : 0;
+      if (xDisc !== yDisc) return xDisc - yDisc;
+      return x.r.localeCompare(y.r);
+    });
+    return list;
+  }, [view, discovered, comboSearch, comboUndiscOnly]);
 
   // sort all META by tier, only show discovered
   const items = React.useMemo(() => {
@@ -230,6 +251,21 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+        </div>
+      )}
+      {view === 'combos' && (
+        <div className="alc-combo-toolbar">
+          <input
+            className="alc-search"
+            placeholder="search recipes..."
+            value={comboSearch}
+            onChange={(e) => setComboSearch(e.target.value)}
+          />
+          <button
+            className={`alc-combo-filter-btn${comboUndiscOnly ? ' active' : ''}`}
+            onClick={() => setComboUndiscOnly(v => !v)}
+            title="Show only undiscovered results"
+          >NEW</button>
         </div>
       )}
       {view === 'elements' && recent.length > 0 && (
