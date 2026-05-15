@@ -1039,6 +1039,89 @@
     return { frames: [g0, g1], mfKey: 'coil' };
   }
 
+  // ── HELIX: 3 frames — double helix rotates (DNA / RNA / protein) ──────────
+  function s_helix() {
+    const period = 12, amp = 3, cx = 7;
+    function drawFrame(g, phaseRows) {
+      for (let y = 1; y <= 12; y++) {
+        const t = ((y + phaseRows) / period) * 2 * Math.PI;
+        const ax = Math.round(cx + amp * Math.sin(t));
+        const bx = Math.round(cx - amp * Math.sin(t));
+        const front = Math.sin(t) >= 0; // which strand is "in front"
+        if (ax >= 0 && ax < SIZE) px(g, ax, y, front ? 3 : 2);
+        if (bx >= 0 && bx < SIZE) px(g, bx, y, front ? 2 : 3);
+        // Base-pair rung when strands are spread ≥4 px
+        const spread = Math.abs(ax - bx);
+        if (spread >= 4 && y % 3 === 0) {
+          const x0 = Math.min(ax, bx) + 1, x1 = Math.max(ax, bx) - 1;
+          for (let x = x0; x <= x1; x++) px(g, x, y, 1);
+        }
+      }
+      px(g, cx, 0, 4); // sparkle tip
+    }
+    const g0 = blank(); drawFrame(g0, 0);
+    const g1 = blank(); drawFrame(g1, 4);
+    const g2 = blank(); drawFrame(g2, 8);
+    return { frames: [g0, g1, g2], mfKey: 'helix' };
+  }
+
+  // ── HEX: 3 frames — benzene ring with alternating bond highlight (aromatic) ─
+  function s_hex() {
+    const cx = 7, cy = 7, R = 4.5;
+    const verts = [];
+    for (let i = 0; i < 6; i++) {
+      const a = i * Math.PI / 3; // flat-left hex
+      verts.push([Math.round(cx + R * Math.cos(a)), Math.round(cy + R * Math.sin(a))]);
+    }
+    function drawFrame(g, bondPhase) {
+      for (let i = 0; i < 6; i++) {
+        const [x0, y0] = verts[i], [x1, y1] = verts[(i + 1) % 6];
+        line(g, x0, y0, x1, y1, 2);
+        // Alternating bond emphasis (Kekulé resonance frames)
+        if ((i + bondPhase) % 2 === 0) {
+          const mx = Math.round((x0 + x1) / 2), my = Math.round((y0 + y1) / 2);
+          const dx = Math.round((cx - mx) * 0.45), dy = Math.round((cy - my) * 0.45);
+          px(g, mx + dx, my + dy, 3);
+        }
+      }
+      // Aromatic ring current — electron cloud at center
+      px(g, cx, cy, 4); px(g, cx - 1, cy, 3); px(g, cx + 1, cy, 3);
+      px(g, cx, cy - 1, 3); px(g, cx, cy + 1, 3);
+    }
+    const g0 = blank(); drawFrame(g0, 0);
+    const g1 = blank(); drawFrame(g1, 1);
+    // frame 2: both bond sets lit + extra corner glints
+    const g2 = blank(); drawFrame(g2, 0);
+    px(g2, verts[0][0], verts[0][1], 4); px(g2, verts[2][0], verts[2][1], 4);
+    px(g2, verts[4][0], verts[4][1], 4);
+    return { frames: [g0, g1, g2], mfKey: 'hex' };
+  }
+
+  // ── PILL: 2 frames — medicine capsule with sweeping shine ────────────────
+  function s_pill() {
+    function pillBody(g) {
+      // Horizontal capsule: two hemispheres + middle bar
+      circle(g, 5, 7, 3, 2); circle(g, 9, 7, 3, 2);
+      rect(g, 5, 4, 4, 7, 2);
+      // Central score line
+      rect(g, 7, 4, 1, 7, 1);
+      // Left cap slightly brighter tint
+      px(g, 4, 6, 3); px(g, 4, 7, 3); px(g, 4, 8, 3);
+      px(g, 5, 5, 3); px(g, 5, 9, 3);
+      // Right cap shadow
+      px(g, 10, 6, 1); px(g, 10, 7, 1); px(g, 10, 8, 1);
+    }
+    // frame 0 — shine left hemisphere
+    const g0 = blank(); pillBody(g0);
+    px(g0, 3, 5, 4); px(g0, 4, 5, 4); px(g0, 3, 6, 3); px(g0, 4, 6, 4);
+    px(g0, 5, 5, 3);
+    // frame 1 — shine sweeps to right hemisphere
+    const g1 = blank(); pillBody(g1);
+    px(g1, 9, 5, 4); px(g1, 10, 5, 4); px(g1, 9, 6, 4); px(g1, 10, 6, 3);
+    px(g1, 8, 5, 3);
+    return { frames: [g0, g1], mfKey: 'pill' };
+  }
+
   // ---------- archetype registry ----------
   const ARCHETYPES = {
     drop:        { fn: s_drop,        anim: 'bob' },
@@ -1084,7 +1167,11 @@
     spark:       { fn: s_spark,       anim: 'jitter' },
     lantern:     { fn: s_lantern,     anim: 'breathe' },
     ingot:       { fn: s_ingot,       anim: 'shake-sub' },
-    vial:        { fn: s_vial,        anim: 'bubble' }
+    vial:        { fn: s_vial,        anim: 'bubble' },
+    // science-specific archetypes
+    helix:       { fn: s_helix,       anim: 'spin' },
+    hex:         { fn: s_hex,         anim: 'pulse' },
+    pill:        { fn: s_pill,        anim: 'bob' },
   };
 
   // ---------- periodic table element → archetype mapping ----------
@@ -1190,10 +1277,204 @@
     money: 'coin', coin: 'coin', machine: 'gear', robot: 'human',
     computer: 'cube', internet: 'star', moon: 'moon', star: 'star',
     volcano: 'mountain', desert: 'mountain',
-    alchemia: 'eye'
+    alchemia: 'eye',
+
+    // ── alloys ────────────────────────────────────────────────────────────
+    bronze: 'ingot', brass: 'ingot', steel: 'ingot', 'stainless-steel': 'ingot',
+    'cast-iron': 'ingot', amalgam: 'liquid', nitinol: 'coil', solder: 'ingot',
+
+    // ── minerals & gems ───────────────────────────────────────────────────
+    pyrite: 'crystal', galena: 'cube', cinnabar: 'crystal', gypsum: 'crystal',
+    ruby: 'crystal', sapphire: 'crystal', emerald: 'crystal',
+
+    // ── inorganic compounds ───────────────────────────────────────────────
+    'hydrogen-peroxide': 'vial', 'nitrous-oxide': 'bubble', 'baking-soda': 'cube',
+    'washing-soda': 'cube', bleach: 'vial', thermite: 'flame',
+
+    // ── energetics ────────────────────────────────────────────────────────
+    gunpowder: 'cube', tnt: 'cube', nitroglycerin: 'liquid',
+
+    // ── organic chemistry ─────────────────────────────────────────────────
+    methanol: 'vial', formaldehyde: 'vial', acetone: 'vial',
+    benzene: 'hex', phenol: 'vial', 'salicylic-acid': 'vial',
+    aspirin: 'pill', caffeine: 'pill', ethylene_glycol: 'vial',
+    sucrose: 'crystal', starch: 'blob', cellulose: 'leaf',
+    nylon: 'coil', polyethylene: 'blob',
+
+    // ── biochemistry ──────────────────────────────────────────────────────
+    'amino-acid': 'orb', glycine: 'orb', protein: 'helix', atp: 'bolt',
+    'vitamin-c': 'crystal', chlorophyll: 'leaf', hemoglobin: 'orb',
+    dna: 'helix', rna: 'helix', enzyme: 'orb', insulin: 'pill',
+
+    // ── nuclear chemistry ─────────────────────────────────────────────────
+    deuterium: 'drop', tritium: 'radioactive', 'heavy-water': 'drop',
+    'nuclear-fission': 'atom', 'nuclear-fusion': 'atom', 'chain-reaction': 'spark',
+    antimatter: 'orb',
+
+    // ── advanced materials ────────────────────────────────────────────────
+    graphene: 'hex', fullerene: 'orb', 'carbon-nanotube': 'coil',
+    semiconductor: 'crystal', superconductor: 'orb', 'solar-cell': 'sun',
+    penicillin: 'mushroom',
+
+    // ── homodiatomic molecules ────────────────────────────────────────────
+    dihydrogen: 'bubble', dioxygen: 'bubble', dinitrogen: 'bubble',
+    difluorine: 'vial', dichlorine: 'vial', dibromine: 'liquid',
+    diiodine: 'crystal', disulfur: 'crystal',
+
+    // ── binary acids & gases ──────────────────────────────────────────────
+    ammonia: 'bubble', 'hydrogen-sulfide': 'bubble', 'hydrogen-chloride': 'bubble',
+    'hydrogen-fluoride': 'vial', 'hydrogen-iodide': 'vial',
+    'carbon-monoxide': 'bubble', 'carbon-dioxide': 'bubble',
+    'sulfur-dioxide': 'bubble', 'sulfur-trioxide': 'vial',
+    'nitrogen-monoxide': 'bubble', 'nitrogen-dioxide': 'vial', ozone: 'orb',
+
+    // ── mineral acids & hydroxides ────────────────────────────────────────
+    'sulfuric-acid': 'vial', 'nitric-acid': 'vial', 'carbonic-acid': 'vial',
+    'hydrochloric-acid': 'vial', 'hydrofluoric-acid': 'vial', 'phosphoric-acid': 'vial',
+    'sodium-hydroxide': 'vial', 'calcium-hydroxide': 'vial',
+    'potassium-hydroxide': 'vial', 'iron-hydroxide': 'vial',
+
+    // ── metal oxides ──────────────────────────────────────────────────────
+    'magnesium-oxide': 'crystal', 'calcium-oxide': 'crystal', 'iron-oxide': 'cube',
+    'copper-oxide': 'cube', 'aluminum-oxide': 'crystal', 'silicon-dioxide': 'crystal',
+    'zinc-oxide': 'crystal', 'titanium-dioxide': 'crystal',
+
+    // ── metal halides ─────────────────────────────────────────────────────
+    'sodium-chloride': 'crystal', 'potassium-chloride': 'crystal',
+    'calcium-chloride': 'crystal', 'iron-chloride': 'vial',
+    'copper-chloride': 'vial', 'silver-chloride': 'crystal',
+
+    // ── metal sulfides, nitrides, carbonates ─────────────────────────────
+    'iron-sulfide': 'crystal', 'copper-sulfide': 'crystal', 'zinc-sulfide': 'crystal',
+    'lithium-nitride': 'crystal', 'calcium-nitride': 'crystal',
+    'calcium-carbonate': 'crystal', 'sodium-carbonate': 'crystal',
+
+    // ── basic organics ────────────────────────────────────────────────────
+    methane: 'bubble', ethylene: 'bubble', acetylene: 'bubble',
+    ethanol: 'vial', 'acetic-acid': 'vial', glucose: 'crystal', urea: 'vial',
+
+    // ── food & fermentation ───────────────────────────────────────────────
+    yeast: 'orb', bread: 'cube', beer: 'vial', wine: 'vial', vinegar: 'vial',
+    soap: 'crystal', honey: 'vial', cheese: 'cube', butter: 'cube', yogurt: 'vial',
+    'lactic-acid': 'vial', 'citric-acid': 'vial', 'lye-soap': 'crystal',
+    concrete: 'cube', cement: 'cube', glass: 'crystal', plaster: 'cube',
+
+    // ── astronomy ─────────────────────────────────────────────────────────
+    supernova: 'sun', 'neutron-star': 'atom', 'white-dwarf': 'orb',
+    pulsar: 'atom', quasar: 'orb', nebula: 'orb',
+
+    // ── electrochemistry ─────────────────────────────────────────────────
+    'copper-sulfate': 'crystal', 'voltaic-cell': 'bolt', 'fuel-cell': 'bolt',
+    'galvanized-iron': 'ingot', electrolysis: 'bolt',
+    saltpeter: 'crystal', borax: 'crystal',
+    'potassium-nitrate': 'crystal', 'ammonium-nitrate': 'crystal',
+
+    // ── inorganic additions ───────────────────────────────────────────────
+    'hydrogen-cyanide': 'vial', chloroform: 'vial', ozone: 'orb',
+
+    // ── biology / life sciences ───────────────────────────────────────────
+    virus: 'orb', 'cell': 'orb', mitochondria: 'orb', ribosome: 'orb',
+    chromosome: 'helix', antibody: 'helix', prion: 'helix', 'stem-cell': 'orb',
+
+    // ── advanced materials ────────────────────────────────────────────────
+    aerogel: 'orb', 'liquid-crystal': 'crystal', 'titanium-alloy': 'ingot',
+    'shape-memory': 'ingot', zeolite: 'crystal',
+
+    // ── energy & fuels ────────────────────────────────────────────────────
+    'natural-gas': 'bubble', 'crude-oil': 'vial', kerosene: 'vial', gasoline: 'vial',
+    'carbon-capture': 'orb',
+
+    // ── energetics ────────────────────────────────────────────────────────
+    rdx: 'radioactive', 'black-powder': 'cube',
+
+    // ── metal fluorides ───────────────────────────────────────────────────
+    'lithium-fluoride': 'crystal', 'sodium-fluoride': 'crystal',
+    'potassium-fluoride': 'crystal', 'calcium-fluoride': 'crystal',
+    'magnesium-fluoride': 'crystal', 'barium-fluoride': 'crystal',
+    'uranium-hexafluoride': 'vial',
+
+    // ── more metal oxides ─────────────────────────────────────────────────
+    'sodium-oxide': 'crystal', 'potassium-oxide': 'crystal',
+    'barium-oxide': 'crystal', 'manganese-dioxide': 'crystal',
+    'chromium-oxide': 'crystal', 'nickel-oxide': 'crystal',
+    'cobalt-oxide': 'crystal', 'lead-oxide': 'crystal',
+    'tin-oxide': 'crystal', 'vanadium-pentoxide': 'crystal',
+    'tungsten-trioxide': 'crystal',
+
+    // ── metal carbides ────────────────────────────────────────────────────
+    'calcium-carbide': 'crystal', 'silicon-carbide': 'crystal',
+    'tungsten-carbide': 'gear', 'boron-carbide': 'crystal',
+    'titanium-carbide': 'gear',
+
+    // ── metal nitrides ────────────────────────────────────────────────────
+    'boron-nitride': 'crystal', 'silicon-nitride': 'crystal',
+    'titanium-nitride': 'ingot', 'aluminum-nitride': 'crystal',
+    'magnesium-nitride': 'crystal',
+
+    // ── more metal sulfides ───────────────────────────────────────────────
+    'silver-sulfide': 'crystal', 'sodium-sulfide': 'crystal',
+    'tin-sulfide': 'crystal', 'bismuth-sulfide': 'crystal',
+
+    // ── metal sulfates ────────────────────────────────────────────────────
+    'magnesium-sulfate': 'crystal', 'iron-sulfate': 'crystal',
+    'zinc-sulfate': 'crystal', 'barium-sulfate': 'crystal',
+    'sodium-sulfate': 'crystal', 'aluminum-sulfate': 'crystal',
+    'nickel-sulfate': 'crystal',
+
+    // ── more metal carbonates ─────────────────────────────────────────────
+    'magnesium-carbonate': 'crystal', 'iron-carbonate': 'crystal',
+    'barium-carbonate': 'crystal', 'potassium-carbonate': 'crystal',
+
+    // ── phosphates ────────────────────────────────────────────────────────
+    'calcium-phosphate': 'crystal', 'trisodium-phosphate': 'crystal',
+
+    // ── hydrides ──────────────────────────────────────────────────────────
+    phosphine: 'bubble', arsine: 'bubble', silane: 'bubble',
+    diborane: 'bubble', 'hydrogen-bromide': 'bubble',
+
+    // ── more organics ─────────────────────────────────────────────────────
+    'carbon-disulfide': 'vial', 'carbon-tetrachloride': 'vial',
+    glycerol: 'vial', propane: 'bubble', butane: 'bubble',
+    ethane: 'bubble', acetaldehyde: 'vial', toluene: 'hex',
+
+    // ── new alloys ────────────────────────────────────────────────────────
+    cupronickel: 'coin', nichrome: 'coil', 'sterling-silver': 'coin',
+    'rose-gold': 'coin', duralumin: 'ingot',
+
+    // ── sugars & biochem ──────────────────────────────────────────────────
+    fructose: 'crystal', lactose: 'crystal', galactose: 'crystal',
+    dopamine: 'pill', serotonin: 'pill', melatonin: 'pill',
+    collagen: 'helix', keratin: 'helix',
+
+    // ── industrial ────────────────────────────────────────────────────────
+    'potassium-permanganate': 'crystal', 'adipic-acid': 'vial',
+    'acrylic-acid': 'vial',
+
+    // ── metal hydrides ────────────────────────────────────────────────────
+    'lithium-hydride': 'ingot', 'sodium-hydride': 'ingot',
+    'calcium-hydride': 'ingot', 'potassium-hydride': 'ingot',
+    'lithium-aluminum-hydride': 'ingot',
+
+    // ── more metal halides ────────────────────────────────────────────────
+    'aluminum-chloride': 'crystal', 'barium-chloride': 'crystal',
+    'magnesium-bromide': 'crystal', 'silver-iodide': 'crystal',
+    'potassium-iodide': 'crystal', 'sodium-iodide': 'crystal',
+    'lead-iodide': 'crystal',
+
+    // ── lubricant sulfides ────────────────────────────────────────────────
+    'molybdenum-disulfide': 'gear', 'tungsten-disulfide': 'gear',
+    'nickel-sulfide': 'crystal', 'cobalt-sulfide': 'crystal',
+    'aluminum-sulfide': 'crystal',
+
+    // ── more organics ─────────────────────────────────────────────────────
+    propylene: 'bubble', cyclohexane: 'hex',
+    'calcium-cyanamide': 'crystal', 'calcium-silicate': 'crystal',
+
+    // ── phosphorus compounds ──────────────────────────────────────────────
+    'phosphorus-pentoxide': 'crystal', 'phosphorus-trichloride': 'vial',
   };
 
-  const MODIFIERS = ['living','frozen','burning','ancient','enchanted','shadow','radiant','golden','crystal'];
+  const MODIFIERS = ['living','frozen','burning','ancient','enchanted','shadow','radiant','dark','charged'];
 
   function archetypeFor(key) {
     for (const m of MODIFIERS) {
