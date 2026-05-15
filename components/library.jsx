@@ -360,10 +360,23 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
     const d = dragRef.current;
     if (!d || d.pointerId !== e.pointerId) return;
     if (d.ghost) d.ghost.remove();
+    const moved = Math.hypot(e.clientX - d.startX, e.clientY - d.startY);
+    if (moved >= 8 && playRef.current) {
+      const r = playRef.current.getBoundingClientRect();
+      const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!inside) {
+        const hint = document.createElement('div');
+        hint.className = 'alc-drop-hint';
+        hint.textContent = 'drop on the play area';
+        hint.style.left = e.clientX + 'px';
+        hint.style.top = (e.clientY - 36) + 'px';
+        document.body.appendChild(hint);
+        hint.addEventListener('animationend', () => hint.remove(), { once: true });
+      }
+    }
     window.dispatchEvent(new CustomEvent('alchemia:librarydrop', {
       detail: { key: d.key, clientX: e.clientX, clientY: e.clientY }
     }));
-    const moved = Math.hypot(e.clientX - d.startX, e.clientY - d.startY);
     if (moved < 8) {
       if (view === 'elements') {
         setDetailKey(d.key);
