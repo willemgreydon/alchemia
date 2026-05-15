@@ -115,6 +115,7 @@ function App() {
     return localStorage.getItem('alchemia.seenHelp') !== '1';
   });
   const [filter, setFilter] = useState('all'); // all | new | locked
+  const [libView, setLibView] = useState('elements'); // elements | combos
 
   // recent unlocks
   const [recent, setRecent] = useState([]);
@@ -234,6 +235,15 @@ function App() {
         onHelp={() => setHelpOpen(true)}
         onReset={resetAll}
         onClear={clearAll}
+        libView={libView}
+        onCombos={() => {
+          setLibView(v => v === 'combos' ? 'elements' : 'combos');
+          // on mobile, snap the library open
+          if (window.innerWidth <= 900) {
+            const h = Math.round(window.innerHeight * 0.55);
+            document.documentElement.style.setProperty('--lib-h', h + 'px');
+          }
+        }}
       />
 
       <PlayArea
@@ -252,6 +262,8 @@ function App() {
         setSearch={setSearch}
         filter={filter}
         setFilter={setFilter}
+        libView={libView}
+        setLibView={setLibView}
         recent={recent}
         spawn={spawn}
         playRef={playRef}
@@ -270,7 +282,7 @@ function App() {
 }
 
 // ============ top bar ============
-function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onReset, onClear }) {
+function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onReset, onClear, libView, onCombos }) {
   return (
     <div className="alc-topbar">
       <div className="alc-brand">
@@ -290,6 +302,7 @@ function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onRese
       </div>
       <div className="alc-actions">
         <button className="alc-btn" onClick={onClear} title="Clear play area">CLEAR</button>
+        <button className={`alc-btn${libView === 'combos' ? ' alc-btn-active' : ''}`} onClick={onCombos}>COMBOS</button>
         <button className="alc-btn" onClick={onHelp}>HOW</button>
         <button className="alc-btn alc-btn-ghost" onClick={onReset} title="Reset progress">⟲</button>
       </div>
@@ -469,7 +482,43 @@ function Tile({ inst, onPointerDown, onRemove, labelsAlways }) {
 }
 
 // ============ library ============
-function Library({ discovered, search, setSearch, filter, setFilter, recent, spawn, playRef, fx }) {
+function LibCard({ elKey, unknown, onPointerDown }) {
+  const meta = DB.META[elKey] || { e: '?', c: '#888', t: 0 };
+  const pt = window.PeriodicTable?.BY_NAME[elKey?.toLowerCase()];
+  if (unknown) {
+    return (
+      <div className="alc-lib-item alc-combo-unknown">
+        <div className="alc-combo-qmark">?</div>
+      </div>
+    );
+  }
+  if (pt) {
+    const stateAbbr = { solid: 's', liquid: 'l', gas: 'g' }[pt.state] || '';
+    return (
+      <div className="alc-lib-item alc-lib-item--pt" style={{ '--tint': meta.c }} onPointerDown={onPointerDown}>
+        <div className="alc-pt-z">{pt.z}</div>
+        <div className="alc-pt-state">{stateAbbr}</div>
+        <div className="alc-pt-icon"><PixelIcon elKey={elKey} /></div>
+        <div className="alc-pt-name">{pt.name}</div>
+      </div>
+    );
+  }
+  return (
+    <div className="alc-lib-item" style={{ '--tint': meta.c }} onPointerDown={onPointerDown}>
+      <div className="alc-lib-emoji"><PixelIcon elKey={elKey} /></div>
+      <div className="alc-lib-name">{DB.displayName(elKey)}</div>
+    </div>
+  );
+}
+
+function Library({ discovered, search, setSearch, filter, setFilter, libView: view, setLibView: setView, recent, spawn, playRef, fx }) {
+
+  // combos: all recipes where both ingredients are discovered
+  const combos = useMemo(() => {
+    if (view !== 'combos') return [];
+    return DB.RECIPES.filter(({ a, b }) => discovered.has(a) && discovered.has(b));
+  }, [view, discovered]);
+
   // sort all META by tier, only show discovered
   const items = useMemo(() => {
     const arr = [...discovered].map(k => ({ key: k, meta: DB.META[k] || { e: '?', c: '#888', t: 0 } }));
@@ -648,18 +697,25 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
         <div className="alc-lib-handle-pill" />
       </div>
       <div className="alc-library-head">
-        <div className="alc-library-title">LIBRARY</div>
-        <div className="alc-library-count">{discovered.size} elements</div>
+        <div className="alc-lib-tabs">
+          <button className={`alc-lib-tab${view === 'elements' ? ' active' : ''}`} onClick={() => setView('elements')}>ELEMENTS</button>
+          <button className={`alc-lib-tab${view === 'combos' ? ' active' : ''}`} onClick={() => setView('combos')}>COMBOS</button>
+        </div>
+        <div className="alc-library-count">
+          {view === 'elements' ? `${discovered.size} elements` : `${combos.length} recipes`}
+        </div>
       </div>
-      <div className="alc-search-wrap">
-        <input
-          className="alc-search"
-          placeholder="search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-      {recent.length > 0 && (
+      {view === 'elements' && (
+        <div className="alc-search-wrap">
+          <input
+            className="alc-search"
+            placeholder="search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      )}
+      {view === 'elements' && recent.length > 0 && (
         <div className="alc-recent">
           <div className="alc-recent-label">RECENT</div>
           <div className="alc-recent-row">
@@ -676,43 +732,59 @@ function Library({ discovered, search, setSearch, filter, setFilter, recent, spa
       )}
       <div className="alc-library-scroll-area">
         <div className="alc-library-list" ref={listRef}>
-          {items.map(({ key, meta }) => {
-            const pt = window.PeriodicTable?.BY_NAME[key.toLowerCase()];
-            if (pt) {
-              const stateAbbr = { solid: 's', liquid: 'l', gas: 'g' }[pt.state] || '';
-              return (
-                <div
-                  key={key}
-                  className="alc-lib-item alc-lib-item--pt"
-                  onPointerDown={(e) => onItemPointerDown(e, key)}
-                  style={{ '--tint': meta.c }}
-                  title={`${pt.name} — ${pt.cat}`}
-                >
-                  <div className="alc-pt-z">{pt.z}</div>
-                  <div className="alc-pt-state">{stateAbbr}</div>
-                  <div className="alc-pt-icon"><PixelIcon elKey={key} /></div>
-                  <div className="alc-pt-name">{pt.name}</div>
-                  <div className="alc-pt-weight">{pt.weight}</div>
-                  <div className="alc-pt-shells">{pt.shells.join('·')}</div>
-                </div>
-              );
-            }
-            return (
-              <div
-                key={key}
-                className="alc-lib-item"
-                onPointerDown={(e) => onItemPointerDown(e, key)}
-                style={{ '--tint': meta.c }}
-                title={DB.displayName(key)}
-              >
-                <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
-                <div className="alc-lib-name">{DB.displayName(key)}</div>
-                <div className="alc-lib-tier">T{meta.t}</div>
+          {view === 'combos' ? (
+            combos.length === 0 ? (
+              <div className="alc-lib-empty">No combinations yet.<br/>Combine elements to unlock recipes.</div>
+            ) : combos.map(({ a, b, r }, i) => (
+              <div key={i} className="alc-combo-row">
+                <LibCard elKey={a} onPointerDown={(e) => onItemPointerDown(e, a)} />
+                <div className="alc-combo-op">+</div>
+                <LibCard elKey={b} onPointerDown={(e) => onItemPointerDown(e, b)} />
+                <div className="alc-combo-op">=</div>
+                <LibCard elKey={r} unknown={!discovered.has(r)} onPointerDown={discovered.has(r) ? (e) => onItemPointerDown(e, r) : undefined} />
               </div>
-            );
-          })}
-          {items.length === 0 && (
-            <div className="alc-lib-empty">No matches.</div>
+            ))
+          ) : (
+            <>
+              {items.map(({ key, meta }) => {
+                const pt = window.PeriodicTable?.BY_NAME[key.toLowerCase()];
+                if (pt) {
+                  const stateAbbr = { solid: 's', liquid: 'l', gas: 'g' }[pt.state] || '';
+                  return (
+                    <div
+                      key={key}
+                      className="alc-lib-item alc-lib-item--pt"
+                      onPointerDown={(e) => onItemPointerDown(e, key)}
+                      style={{ '--tint': meta.c }}
+                      title={`${pt.name} — ${pt.cat}`}
+                    >
+                      <div className="alc-pt-z">{pt.z}</div>
+                      <div className="alc-pt-state">{stateAbbr}</div>
+                      <div className="alc-pt-icon"><PixelIcon elKey={key} /></div>
+                      <div className="alc-pt-name">{pt.name}</div>
+                      <div className="alc-pt-weight">{pt.weight}</div>
+                      <div className="alc-pt-shells">{pt.shells.join('·')}</div>
+                    </div>
+                  );
+                }
+                return (
+                  <div
+                    key={key}
+                    className="alc-lib-item"
+                    onPointerDown={(e) => onItemPointerDown(e, key)}
+                    style={{ '--tint': meta.c }}
+                    title={DB.displayName(key)}
+                  >
+                    <div className="alc-lib-emoji"><PixelIcon elKey={key} /></div>
+                    <div className="alc-lib-name">{DB.displayName(key)}</div>
+                    <div className="alc-lib-tier">T{meta.t}</div>
+                  </div>
+                );
+              })}
+              {items.length === 0 && (
+                <div className="alc-lib-empty">No matches.</div>
+              )}
+            </>
           )}
         </div>
         <div className="alc-lib-strip" ref={stripRef}>
