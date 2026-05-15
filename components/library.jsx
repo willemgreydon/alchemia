@@ -6,6 +6,25 @@ function spiralOffset(n) {
   return { x: r * Math.cos(theta), y: r * Math.sin(theta) };
 }
 
+// formula complexity score: element-type count × 3 + sum of subscript digit values
+// falls back to tier for conceptual elements without a chemical formula
+function formulaComplexity(key) {
+  const meta = DB.META[key];
+  if (!meta) return 0;
+  const name = meta.displayName || '';
+  const match = name.match(/\(([^)]+)\)$/);
+  if (!match) return (meta.t || 0) * 2;
+  const formula = match[1];
+  const SUB = '₀₁₂₃₄₅₆₇₈₉';
+  const elementTypes = (formula.match(/[A-Z]/g) || []).length;
+  let subscriptSum = 0;
+  for (const ch of formula) {
+    const idx = SUB.indexOf(ch);
+    if (idx >= 0) subscriptSum += idx;
+  }
+  return elementTypes * 3 + subscriptSum;
+}
+
 // deterministic fantasy name from element key — same key always gets same mystery name
 function fantasyName(key) {
   let h = 0;
@@ -73,7 +92,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
       );
     }
     if (comboUndiscOnly) list = list.filter(({ r }) => !discovered.has(r));
-    // sort: undiscovered first (by how many inputs are available: 2→1→0), then discovered last
+    // sort: undiscovered first (by inputs available: 2→1→0), then by formula complexity asc, then discovered last
     list.sort((x, y) => {
       const xDisc = discovered.has(x.r) ? 1 : 0;
       const yDisc = discovered.has(y.r) ? 1 : 0;
@@ -83,6 +102,8 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
         const yAvail = (discovered.has(y.a) ? 1 : 0) + (discovered.has(y.b) ? 1 : 0);
         if (xAvail !== yAvail) return yAvail - xAvail; // more available inputs first
       }
+      const cDiff = formulaComplexity(x.r) - formulaComplexity(y.r);
+      if (cDiff !== 0) return cDiff; // simpler formulas first within same tier
       return x.r.localeCompare(y.r);
     });
     return list;
