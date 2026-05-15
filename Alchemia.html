@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>ALCHEMIA — combine everything</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="dist/styles.css">
 
-<link rel="preload" as="script" href="recipes.js">
-<link rel="preload" as="script" href="icons.js">
+<link rel="preload" as="script" href="dist/recipes.js">
+<link rel="preload" as="script" href="dist/icons.js">
 </head>
 <body>
 <div id="alc-loading" style="position:fixed;inset:0;background:#F2EDE3;display:flex;align-items:center;justify-content:center;z-index:9999;"><span style="font-family:monospace;font-size:13px;letter-spacing:0.16em;color:#0E0E0E;text-transform:uppercase;">Loading&hellip;</span></div>
@@ -18,13 +18,13 @@
 <script defer src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
 
 <!-- periodic table element data -->
-<script defer src="periodic-elements.js"></script>
+<script defer src="dist/periodic-elements.js"></script>
 <!-- recipes (plain JS) -->
-<script defer src="recipes.js"></script>
+<script defer src="dist/recipes.js"></script>
 <!-- procedural pixel-art icon renderer -->
-<script defer src="icons.js"></script>
+<script defer src="dist/icons.js"></script>
 <!-- engine (plain JS) -->
-<script defer src="engine.js"></script>
+<script defer src="dist/engine.js"></script>
 <!-- pre-compiled components -->
 <script defer src="dist/tweaks-panel.js"></script>
 <script defer src="dist/components/pixel-icons.js"></script>

@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "babel tweaks-panel.jsx app.jsx --out-dir dist --presets @babel/preset-react,@babel/preset-env && babel components --out-dir dist/components --presets @babel/preset-react,@babel/preset-env"
+    "build": "npm run compile && npm run minify:js && npm run minify:css",
+    "compile": "babel tweaks-panel.jsx app.jsx --out-dir dist --presets @babel/preset-react,@babel/preset-env && babel components --out-dir dist/components --presets @babel/preset-react,@babel/preset-env",
+    "minify:js": "terser recipes.js -o dist/recipes.js --compress --mangle && terser icons.js -o dist/icons.js --compress --mangle && terser engine.js -o dist/engine.js --compress --mangle && terser periodic-elements.js -o dist/periodic-elements.js --compress --mangle && for f in dist/tweaks-panel.js dist/app.js dist/components/library.js dist/components/play-area.js dist/components/pixel-icons.js dist/components/hint-ticker.js dist/components/top-bar.js dist/components/toasts.js dist/components/help.js; do terser \"$f\" --compress --mangle -o \"$f\"; done",
+    "minify:css": "cleancss styles.css -o dist/styles.css"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.0",
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
-    "@babel/preset-react": "^7.24.0"
+    "@babel/preset-react": "^7.24.0",
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.47.1"
   }
 }
