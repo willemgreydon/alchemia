@@ -441,15 +441,12 @@ function App() {
   const playRef = useRef(null);
   const fx = useAmbient(ambientRef, particleRef);
 
-  // discovered (persisted)
+  // discovered (persisted — all valid META keys are restored, not just periodic table)
   const [discovered, setDiscovered] = useState(() => {
-    // on load, keep only periodic-table elements — everything else must be re-discovered
-    const periodicSet = new Set(DB.PERIODIC_TABLE_KEYS);
     try {
       const stored = JSON.parse(localStorage.getItem('alchemia.discovered') || '[]');
       if (Array.isArray(stored) && stored.length) {
-        const filtered = stored.filter(k => periodicSet.has(k));
-        return new Set([...filtered, ...DB.STARTERS]);
+        return new Set([...DB.STARTERS, ...stored.filter(k => k in DB.META)]);
       }
     } catch (e) {}
     return new Set(DB.STARTERS);
@@ -608,9 +605,8 @@ function App() {
   const clearAll = () => setInstances([]);
 
   // reset
-  const [confirmReset, setConfirmReset] = useState(false);
-  const resetAll = () => setConfirmReset(true);
-  const onResetConfirmed = () => {
+  const resetAll = () => {
+    if (!window.confirm('Reset all progress? All your discovered elements will be lost.')) return;
     setDiscovered(new Set(DB.STARTERS));
     setInstances([]);
     setRecent([]);
@@ -635,9 +631,6 @@ function App() {
         progress={progress}
         onHelp={() => setHelpOpen(true)}
         onReset={resetAll}
-        confirmReset={confirmReset}
-        setConfirmReset={setConfirmReset}
-        onResetConfirmed={onResetConfirmed}
         onClear={clearAll}
         libView={libView}
         onCombos={() => {
