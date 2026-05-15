@@ -133,6 +133,14 @@
   .alc-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
   .alc-btn-ghost { background: transparent; box-shadow: none; }
   .alc-btn-ghost:hover { background: var(--paper); }
+  .alc-btn-icon {
+    padding: 6px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .alc-btn-active { background: var(--ink); color: var(--paper); box-shadow: 2px 2px 0 rgba(0,0,0,0.3); }
   .alc-btn-active:hover { background: var(--ink); box-shadow: 3px 3px 0 rgba(0,0,0,0.3); }
   .alc-btn--danger { background: #c0392b; color: #fff; border-color: #922b21; box-shadow: 2px 2px 0 #7b241c; }
@@ -1326,6 +1334,7 @@
       box-shadow: 2px 2px 0 var(--ink);
     }
     .alc-btn:hover { box-shadow: 3px 3px 0 var(--ink); }
+    .alc-btn-icon { padding: 6px; width: 36px; height: 36px; }
 
     /* Play area — bottom driven by --lib-h (set by JS snap sheet) */
     .alc-playarea { right: 0; top: 54px; bottom: calc(var(--lib-h, 220px) + 60px); transition: bottom 220ms ease; }

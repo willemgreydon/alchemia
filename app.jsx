@@ -287,6 +287,8 @@ function useAmbientSound(discoveredSize, soundOn) {
   const hasInteracted = useRef(false);
   const nodesRef = useRef(null);
   const melodicTimerRef = useRef(null);
+  const soundOnRef = useRef(soundOn);
+  soundOnRef.current = soundOn;
 
   useEffect(() => {
     function startAmbient() {
@@ -301,7 +303,7 @@ function useAmbientSound(discoveredSize, soundOn) {
 
         // Master gain — all layers route here
         const master = ctx.createGain();
-        master.gain.setValueAtTime(soundOn ? 0.6 : 0, now);
+        master.gain.setValueAtTime(soundOnRef.current ? 0.6 : 0, now);
         master.connect(ctx.destination);
 
         // ---- Layer A: root drone (triangle, A3 = 220 Hz) ----
@@ -470,7 +472,7 @@ function App() {
         const cy = window.innerHeight / 2;
         fx.current.particles.burst(cx, cy, '#FFC838', { count: 80, speed: 9 });
       }
-      if (tweaks.soundOn) milestoneSound();
+      if (sfxOnRef.current) milestoneSound();
     }
   }, [discovered.size]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -500,16 +502,20 @@ function App() {
     return new Set(recent.filter(k => (now - (recentTimestamps.current.get(k) || 0)) < 60000));
   }, [recent, recentTick]);
 
+  const [musicOn, setMusicOn] = useState(true);
+  const [sfxOn, setSfxOn] = useState(true);
+  const sfxOnRef = useRef(sfxOn);
+  sfxOnRef.current = sfxOn;
+
   // tweaks
   const tweaksDefaults = /*EDITMODE-BEGIN*/{
-    "soundOn": true,
     "showHints": true,
     "labelsAlways": true,
     "accentPalette": ["#FF5A1F","#B847C2","#FFC838"]
   }/*EDITMODE-END*/;
   const tweaks = window.useTweaks ? window.useTweaks(tweaksDefaults)[0] : tweaksDefaults;
 
-  useAmbientSound(discovered.size, tweaks.soundOn);
+  useAmbientSound(discovered.size, musicOn);
 
   // discover element helper
   const discover = useCallback((key) => {
@@ -541,7 +547,7 @@ function App() {
 
       if (!result) {
         // failure shake
-        if (tweaks.soundOn) failSound();
+        if (sfxOnRef.current) failSound();
         if (fx.current) fx.current.particles.burst(mx, my, '#7E7E7E', { count: 14, speed: 3 });
         return prev.map(i => {
           if (i.id === aId || i.id === bId) return { ...i, shake: Date.now() };
@@ -557,7 +563,7 @@ function App() {
         fx.current.particles.burst(mx, my, '#FFFFFF', { count: 20, speed: 4 });
         fx.current.ambient.pulse(wasDiscovered ? 0.3 : 0.9);
       }
-      if (tweaks.soundOn) wasDiscovered ? successSound() : discoverySound();
+      if (sfxOnRef.current) wasDiscovered ? successSound() : discoverySound();
 
       if (!wasDiscovered) {
         discover(result);
@@ -568,7 +574,7 @@ function App() {
       next.push({ id: uid(), key: result, x: mx, y: my, born: Date.now(), firstDiscovery: !wasDiscovered });
       return next;
     });
-  }, [discovered, tweaks.soundOn, discover]);
+  }, [discovered, discover]);
 
   // early dismiss — player clicks or swipes left on a toast
   const dismissToast = useCallback((id) => {
@@ -633,6 +639,10 @@ function App() {
         onReset={resetAll}
         onClear={clearAll}
         libView={libView}
+        musicOn={musicOn}
+        sfxOn={sfxOn}
+        onToggleMusic={() => setMusicOn(v => !v)}
+        onToggleSfx={() => setSfxOn(v => !v)}
         onCombos={() => {
           setLibView(v => v === 'combos' ? 'elements' : 'combos');
           // on mobile, snap the library open
@@ -651,7 +661,7 @@ function App() {
         remove={remove}
         fx={fx}
         labelsAlways={tweaks.labelsAlways}
-        onPickup={tweaks.soundOn ? pickupSound : null}
+        onPickup={sfxOn ? pickupSound : null}
       />
 
       <Library
