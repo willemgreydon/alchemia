@@ -626,10 +626,16 @@
   .alc-combo-row .alc-lib-item,
   .alc-combo-row .alc-lib-item--pt {
     flex: 0 0 68px;
-    min-height: 72px;
     width: 68px;
+    height: 68px;
+    min-height: 68px;
+    padding: 4px;
+    justify-content: center;
     cursor: default;
   }
+  /* remove extra top-margin on icons inside combo cards so they stay centred */
+  .alc-combo-row .alc-pt-icon { margin-top: 0; }
+  .alc-combo-row .alc-lib-emoji { width: 32px; height: 32px; }
   .alc-combo-op {
     font-family: 'Pixelify Sans', monospace;
     font-size: 18px;
@@ -646,7 +652,11 @@
     font-weight: 700;
     opacity: 0.3;
     line-height: 1;
-    margin-top: 8px;
+  }
+  .alc-combo-unknown-name {
+    font-style: italic;
+    opacity: 0.4;
+    letter-spacing: 0.04em;
   }
   .alc-library-count {
     font-size: 11px;

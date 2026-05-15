@@ -1,4 +1,19 @@
 // ============ library ============
+
+// deterministic fantasy name from element key — same key always gets same mystery name
+function fantasyName(key) {
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (Math.imul(31, h) + key.charCodeAt(i)) | 0;
+  const rand = () => { h ^= h << 13; h ^= h >> 17; h ^= h << 5; return (h >>> 0) / 0x100000000; };
+  const starts = ['ae','xy','vor','keth','zil','myr','eth','sul','nox','ix','eld','brym','sar','ven','gor','xan','vel','thyr'];
+  const mids   = ['ar','em','il','or','un','ath','esh','om','yl'];
+  const ends   = ['ax','is','or','um','el','on','ix','eth','an','yr','oth','en'];
+  const s = starts[Math.floor(rand() * starts.length)];
+  const m = rand() > 0.45 ? mids[Math.floor(rand() * mids.length)] : '';
+  const e = ends[Math.floor(rand() * ends.length)];
+  return s + m + e;
+}
+
 function LibCard({ elKey, unknown, onPointerDown }) {
   const meta = DB.META[elKey] || { e: '?', c: '#888', t: 0 };
   const pt = window.PeriodicTable?.BY_NAME[elKey?.toLowerCase()];
@@ -6,6 +21,7 @@ function LibCard({ elKey, unknown, onPointerDown }) {
     return (
       <div className="alc-lib-item alc-combo-unknown">
         <div className="alc-combo-qmark">?</div>
+        <div className="alc-lib-name alc-combo-unknown-name">{fantasyName(elKey || '?')}</div>
       </div>
     );
   }
