@@ -438,6 +438,8 @@ function useAmbientSound(discoveredSize, soundOn) {
 
 // ============ root app ============
 function App() {
+  useEffect(() => { document.getElementById('alc-loading')?.remove(); }, []);
+
   const ambientRef = useRef(null);
   const particleRef = useRef(null);
   const playRef = useRef(null);
