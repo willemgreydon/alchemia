@@ -124,6 +124,7 @@ const PlayArea = React.forwardRef(function PlayArea(props, ref) {
           <div className="alc-empty-glyph">◐◑◒◓</div>
           <div className="alc-empty-title">drag two elements together</div>
           <div className="alc-empty-sub">to discover what happens</div>
+          <div className="alc-empty-arrow" />
         </div>
       )}
       {instances.map(inst => (
@@ -164,6 +165,7 @@ function Tile({ inst, onPointerDown, onRemove, labelsAlways }) {
       >
         <div className="alc-tile-emoji"><PixelIcon elKey={inst.key} /></div>
         {labelsAlways && <div className="alc-tile-label">{name}</div>}
+        {isShaking && <div className="alc-tile-label alc-tile-no-reaction">no reaction</div>}
         <div className="alc-tile-x" onPointerDown={(e) => { e.stopPropagation(); }} onClick={(e) => { e.stopPropagation(); onRemove(); }}>×</div>
       </div>
     </div>

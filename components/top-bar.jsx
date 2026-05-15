@@ -33,6 +33,10 @@ function TopBar({ discoveredCount, total, totalRecipes, progress, onHelp, onRese
         </div>
         <div className="alc-counter-bar">
           <div className="alc-counter-bar-fill" style={{ width: (progress * 100).toFixed(1) + '%' }} />
+          <span className="alc-counter-tick" style={{ left: '25%' }} />
+          <span className="alc-counter-tick" style={{ left: '50%' }} />
+          <span className="alc-counter-tick" style={{ left: '75%' }} />
+          <span className="alc-counter-tick" style={{ left: '100%' }} />
         </div>
         <div className="alc-counter-label">DISCOVERED</div>
       </div>

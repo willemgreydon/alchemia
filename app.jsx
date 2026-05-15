@@ -77,6 +77,25 @@ function App() {
     localStorage.setItem('alchemia.discovered', JSON.stringify([...discovered]));
   }, [discovered]);
 
+  const milestoneRef = useRef(Math.floor((discovered.size / DB.totalElements) * 4));
+  const maxTierSeen = useRef((() => {
+    let max = 0;
+    for (const k of discovered) { const t = DB.META[k]?.t ?? 0; if (t > max) max = t; }
+    return max;
+  })());
+  useEffect(() => {
+    const nextQuarter = Math.floor((discovered.size / DB.totalElements) * 4);
+    if (nextQuarter > milestoneRef.current) {
+      milestoneRef.current = nextQuarter;
+      if (fx.current) {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        fx.current.particles.burst(cx, cy, '#FFC838', { count: 80, speed: 9 });
+      }
+      if (tweaks.soundOn) chord([523.25, 659.25, 783.99, 1046.50, 1318.51], 0.6);
+    }
+  }, [discovered.size]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // instances on the play area
   const [instances, setInstances] = useState([]);
   // toasts
@@ -91,6 +110,17 @@ function App() {
 
   // recent unlocks
   const [recent, setRecent] = useState([]);
+  const recentTimestamps = useRef(new Map());
+  const [recentTick, setRecentTick] = useState(0);
+  useEffect(() => {
+    if (!recent.length) return;
+    const t = setTimeout(() => setRecentTick(n => n + 1), 60000);
+    return () => clearTimeout(t);
+  }, [recent, recentTick]);
+  const recentKeys = useMemo(() => {
+    const now = Date.now();
+    return new Set(recent.filter(k => (now - (recentTimestamps.current.get(k) || 0)) < 60000));
+  }, [recent, recentTick]);
 
   // tweaks
   const tweaksDefaults = /*EDITMODE-BEGIN*/{
@@ -110,6 +140,13 @@ function App() {
       return next;
     });
     setRecent(prev => [key, ...prev.filter(k => k !== key)].slice(0, 8));
+    recentTimestamps.current.set(key, Date.now());
+    const tier = DB.META[key]?.t ?? 0;
+    if (tier > maxTierSeen.current) {
+      maxTierSeen.current = tier;
+      setToasts(t => [...t, { id: uid(), key, time: Date.now(), tierUnlock: tier }]);
+      if (fx.current) fx.current.ambient.pulse(1.0);
+    }
   }, []);
 
   // combine two instances
@@ -249,13 +286,14 @@ function App() {
         libView={libView}
         setLibView={setLibView}
         recent={recent}
+        recentKeys={recentKeys}
         spawn={spawn}
         playRef={playRef}
         fx={fx}
       />
 
       {tweaks.showHints && (
-        <HintTicker discovered={discovered} recent={recent} total={total} />
+        <HintTicker discovered={discovered} recent={recent} total={total} playRef={playRef} />
       )}
 
       <Toasts toasts={toasts} onDismiss={dismissToast} />

@@ -101,6 +101,14 @@
     background: linear-gradient(90deg, var(--orange), var(--magenta), var(--gold));
     transition: width 0.6s cubic-bezier(.2,.7,.2,1);
   }
+  .alc-counter-tick {
+    position: absolute; top: 0; bottom: 0;
+    width: 2px;
+    background: rgba(255,255,255,0.35);
+    transform: translateX(-1px);
+    pointer-events: none;
+    z-index: 1;
+  }
   .alc-counter-label {
     font-size: 10px;
     letter-spacing: 0.22em;
@@ -174,6 +182,31 @@
     text-transform: uppercase;
     color: var(--ink-2);
     text-align: center;
+  }
+  .alc-empty-arrow {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 18px solid var(--ink-2);
+    animation: alc-arrow-bounce-x 1.2s ease-in-out infinite;
+  }
+  @keyframes alc-arrow-bounce-x {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(8px); }
+  }
+  @media (max-width: 900px) {
+    .alc-empty-arrow {
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 18px solid var(--ink-2);
+      border-bottom: none;
+      animation: alc-arrow-bounce-y 1.2s ease-in-out infinite;
+    }
+    @keyframes alc-arrow-bounce-y {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
   }
 
   /* ====================== pixel icon animations ====================== */
@@ -576,6 +609,8 @@
     100% { transform: scale(1) rotate(0); opacity: 1; }
   }
   .alc-tile.is-shake { animation: tile-shake 0.4s ease-in-out; }
+  .alc-tile-no-reaction { animation: alc-no-reaction-fade 0.4s ease-out forwards; }
+  @keyframes alc-no-reaction-fade { 0% { opacity: 1; } 100% { opacity: 0; } }
   .alc-tile.is-first-discovery { animation: tile-pop 0.55s cubic-bezier(.34,1.6,.4,1), alc-glow-ring 0.6s ease-out forwards; }
   @keyframes alc-glow-ring {
     0% { box-shadow: 0 0 0 0px var(--tint); }
@@ -704,6 +739,19 @@
     color: var(--paper);
     opacity: 1;
   }
+  .alc-combo-try-btn {
+    background: none;
+    border: 1px solid var(--tint, #888);
+    color: var(--tint, #888);
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.1s;
+  }
+  .alc-combo-try-btn:hover { opacity: 1; }
   .alc-combos-more {
     display: block;
     width: calc(100% - 36px);
@@ -793,6 +841,10 @@
     box-shadow: 3px 3px 0 var(--ink);
   }
   .alc-lib-item:active { cursor: grabbing; }
+  .alc-lib-item.is-recent {
+    border-top: 3px solid var(--tint);
+    background: color-mix(in srgb, var(--tint) 12%, transparent);
+  }
   .alc-lib-emoji {
     width: 36px; height: 36px;
     line-height: 1;
@@ -1031,6 +1083,7 @@
   .alc-ticker-icon {
     width: 24px; height: 24px;
     display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
   }
   .alc-ticker-icon svg { display: block; width: 100%; height: 100%; }
   .alc-ticker-plus {
@@ -1050,6 +1103,17 @@
     text-transform: uppercase;
     opacity: 0.5;
   }
+  .alc-ticker-refresh {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 14px;
+    padding: 0 4px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .alc-ticker-refresh:focus-visible { outline: 2px solid var(--tint); outline-offset: 2px; }
 
   /* ====================== toasts ====================== */
   .alc-toasts {
@@ -1108,7 +1172,8 @@
     line-height: 1.05;
   }
   .alc-toast-spark {
-    font-size: 22px;
+    width: 18px;
+    height: 18px;
     color: var(--tint);
     animation: spark-rot 2s linear infinite;
     flex-shrink: 0;
@@ -1130,6 +1195,24 @@
   .alc-toast--fact {
     max-width: 400px;
     align-items: flex-start;
+  }
+  .alc-toast--tier-unlock {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    gap: 16px;
+  }
+  .alc-toast--tier-unlock .alc-toast-text { flex: 0 0 auto; text-align: left; }
+  .alc-toast-tier-number {
+    font-family: 'Pixelify Sans', monospace;
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--tint);
+    min-width: 2ch;
+    text-align: center;
+    flex-shrink: 0;
   }
 
   /* ====================== help ====================== */

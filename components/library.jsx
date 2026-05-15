@@ -44,7 +44,7 @@ function LibCard({ elKey, unknown, onPointerDown }) {
   );
 }
 
-function Library({ discovered, search, setSearch, filter, setFilter, libView: view, setLibView: setView, recent, spawn, playRef, fx }) {
+function Library({ discovered, search, setSearch, filter, setFilter, libView: view, setLibView: setView, recent, recentKeys = new Set(), spawn, playRef, fx }) {
 
   const [comboSearch, setComboSearch] = React.useState('');
   const [comboUndiscOnly, setComboUndiscOnly] = React.useState(false);
@@ -289,8 +289,8 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
           <button
             className={`alc-combo-filter-btn${comboUndiscOnly ? ' active' : ''}`}
             onClick={() => setComboUndiscOnly(v => !v)}
-            title="Show only undiscovered results"
-          >NEW</button>
+            title="Show only unknown (undiscovered) results"
+          >UNKNOWN</button>
         </div>
       )}
       {view === 'elements' && recent.length > 0 && (
@@ -322,6 +322,19 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                     <LibCard elKey={b} unknown={!discovered.has(b)} onPointerDown={discovered.has(b) ? (e) => onItemPointerDown(e, b) : undefined} />
                     <div className="alc-combo-op">=</div>
                     <LibCard elKey={r} unknown={!discovered.has(r)} onPointerDown={discovered.has(r) ? (e) => onItemPointerDown(e, r) : undefined} />
+                    {discovered.has(a) && discovered.has(b) && (
+                      <button
+                        className="alc-combo-try-btn"
+                        title="Place both ingredients on the play area"
+                        onClick={() => {
+                          if (!playRef.current) return;
+                          const rect = playRef.current.getBoundingClientRect();
+                          const y = rect.height / 2 - 32;
+                          window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: a, x: rect.width / 2 - 80, y } }));
+                          window.dispatchEvent(new CustomEvent('alchemia:spawn', { detail: { key: b, x: rect.width / 2 + 16, y } }));
+                        }}
+                      >&#9654;</button>
+                    )}
                   </div>
                 ))}
                 {comboLimit < combos.length && (
@@ -340,7 +353,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                   return (
                     <div
                       key={key}
-                      className="alc-lib-item alc-lib-item--pt"
+                      className={`alc-lib-item alc-lib-item--pt${recentKeys.has(key) ? ' is-recent' : ''}`}
                       onPointerDown={(e) => onItemPointerDown(e, key)}
                       style={{ '--tint': meta.c }}
                       title={`${pt.name} — ${pt.cat}`}
@@ -357,7 +370,7 @@ function Library({ discovered, search, setSearch, filter, setFilter, libView: vi
                 return (
                   <div
                     key={key}
-                    className="alc-lib-item"
+                    className={`alc-lib-item${recentKeys.has(key) ? ' is-recent' : ''}`}
                     onPointerDown={(e) => onItemPointerDown(e, key)}
                     style={{ '--tint': meta.c }}
                     title={DB.displayName(key)}
